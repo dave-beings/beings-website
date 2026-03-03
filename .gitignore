@@ -5,6 +5,7 @@ node_modules/
 data/
 .env
 .env.*
+.cursor/mcp.json
 *.log
 *.err
 dist/
