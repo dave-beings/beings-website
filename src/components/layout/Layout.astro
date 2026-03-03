@@ -1,0 +1,102 @@
+---
+/**
+ * Layout Component (P0)
+ * 
+ * Base layout wrapper with Header, Footer, SEO meta tags.
+ * All pages should use this as their root layout.
+ * 
+ * @see docs/bw-prd-01-rebrand.xml - component-inventory > Layout
+ */
+
+import Header from './Header.astro';
+import '../../styles/global.css';
+
+interface Props {
+  /** Page title - will be suffixed with " | Beings" */
+  title: string;
+  /** Meta description for SEO */
+  description?: string;
+  /** OG image URL for social sharing */
+  image?: string;
+  /** Current page path for nav highlighting */
+  currentPath?: string;
+}
+
+const { 
+  title, 
+  description = 'AI-powered qualitative research platform for researchers and analysts.',
+  image = '/og-image.png',
+  currentPath = Astro.url.pathname
+} = Astro.props;
+
+const siteTitle = `${title} | Beings`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- SEO -->
+    <title>{siteTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="Beings" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.site)} />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  
+  <body class="min-h-screen bg-background text-[var(--color-text-primary)] antialiased">
+    <Header currentPath={currentPath} />
+    
+    <main id="main-content">
+      <slot />
+    </main>
+    
+    <!-- Footer placeholder - to be built as separate component -->
+    <footer class="py-12 border-t border-divider mt-auto">
+      <div class="container text-center text-[var(--color-text-secondary)]">
+        <p>&copy; {new Date().getFullYear()} Beings. All rights reserved.</p>
+      </div>
+    </footer>
+    
+    <!-- Dark mode script (runs before paint to prevent flash) -->
+    <script is:inline>
+      // Check for saved theme preference or system preference
+      const getTheme = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      };
+      
+      const theme = getTheme();
+      document.documentElement.setAttribute('data-theme', theme);
+    </script>
+  </body>
+</html>

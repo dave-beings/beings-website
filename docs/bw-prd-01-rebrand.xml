@@ -1,0 +1,1502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  PRD: Beings Marketing Site - Greenfield Rebrand
+  ID: bw-prd-01
+  Status: Draft
+  Created: 2026-01-23
+  
+  PURPOSE:
+  Define the architecture and implementation plan for rebuilding beings.com
+  as a modern static site using Astro + Tailwind, sharing brand DNA with
+  the Beings product (React + MUI) while optimizing for marketing conversion.
+  
+  CONTEXT:
+  - Current site: WordPress + Elementor (26 plugins, high maintenance)
+  - Product: React + Vite + MUI + Dockview (Material Design 3)
+  - Team: 3-person "unicorn" with AI-first workflow (Cursor)
+  - Trigger: Visual rebrand already planned
+  
+  RELATED:
+  - bw-01-wordpress-content-sync.xml (Hybrid WordPress plan, now superseded)
+  - beings/src/theme/* (Product design tokens)
+-->
+
+<prd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata>
+    <id>bw-prd-01</id>
+    <title>Beings Marketing Site - Greenfield Rebrand</title>
+    <status>draft</status>
+    <owner>Dave Johnstone</owner>
+    <created>2026-01-23</created>
+    <updated>2026-02-03</updated>
+    <revision-history>
+      <revision date="2026-02-03" version="1.2">
+        Added animation strategy section (performance-optimized, shared motion package)
+      </revision>
+      <revision date="2026-01-23" version="1.1">
+        Added app-shell strategy, token architecture SSOT, updated phases
+      </revision>
+    </revision-history>
+  </metadata>
+
+  <overview>
+    <problem>
+      <![CDATA[
+      The current beings.com WordPress site has accumulated significant technical debt:
+      
+      1. MAINTENANCE BURDEN: 26 active plugins requiring constant updates
+      2. ELEMENTOR LOCK-IN: Pages built with proprietary Elementor + Element Pack + UICore
+      3. PERFORMANCE: PageSpeed ~75/100 despite W3 Total Cache
+      4. SECURITY SURFACE: Each plugin is a potential vulnerability
+      5. WORKFLOW FRICTION: Cannot "vibe code" with Cursor - requires WP Admin GUI
+      6. REBRAND TIMING: Visual rebrand already planned - rebuild vs migrate
+      
+      For a 3-person team chasing unicorn growth, every hour spent on WordPress
+      maintenance is an hour not spent on the core product.
+      ]]>
+    </problem>
+    
+    <solution>
+      <![CDATA[
+      Build a new marketing site from scratch using:
+      
+      - ASTRO: Static site generator (HTML-first, React islands)
+      - TAILWIND: Utility-first CSS (AI-friendly, fast iteration)
+      - CLOUDFLARE PAGES: Edge deployment (same infra as product)
+      - GIT: Single source of truth (content as code)
+      - CURSOR: AI-first development workflow
+      
+      Share brand DNA with the product (colors, typography, motion) while
+      optimizing for marketing conversion rather than data manipulation.
+      ]]>
+    </solution>
+    
+    <goals>
+      <goal id="G1" priority="P0">Zero WordPress maintenance burden</goal>
+      <goal id="G2" priority="P0">Single source of truth in Git</goal>
+      <goal id="G3" priority="P1">PageSpeed 95+ on all pages</goal>
+      <goal id="G4" priority="P1">Brand continuity with product UI</goal>
+      <goal id="G5" priority="P1">Cursor-native development workflow</goal>
+      <goal id="G6" priority="P2">Blog content migration from WordPress</goal>
+    </goals>
+    
+    <non-goals>
+      <item>Port Elementor page designs pixel-for-pixel</item>
+      <item>Maintain WordPress as fallback</item>
+      <item>Build a CMS admin interface (content lives in Git)</item>
+      <item>Support non-technical content editors (team is technical)</item>
+    </non-goals>
+  </overview>
+
+  <architecture>
+    <principles>
+      <principle id="ARCH-1">Static by Default - No database, no server</principle>
+      <principle id="ARCH-2">Islands for Interactivity - React only where needed</principle>
+      <principle id="ARCH-3">Brand DNA Shared - Same tokens as product</principle>
+      <principle id="ARCH-4">Content as Code - MDX files in Git</principle>
+      <principle id="ARCH-5">AI-First Authoring - Optimized for Cursor workflow</principle>
+      <principle id="ARCH-6">Shell-First Design - Pixel-perfect product replica as foundation</principle>
+    </principles>
+    
+    <tech-stack>
+      <layer name="Framework">
+        <technology>Astro 4.x</technology>
+        <rationale>Static-first, React islands, excellent Cloudflare support</rationale>
+      </layer>
+      <layer name="Styling">
+        <technology>Tailwind CSS 3.x</technology>
+        <rationale>AI writes it perfectly, rapid iteration, small bundle</rationale>
+      </layer>
+      <layer name="Interactive Islands">
+        <technology>React 18 (via @astrojs/react)</technology>
+        <rationale>Same as product, can share components if needed</rationale>
+      </layer>
+      <layer name="Content">
+        <technology>MDX</technology>
+        <rationale>Markdown + React components for rich content</rationale>
+      </layer>
+      <layer name="Deployment">
+        <technology>Cloudflare Pages</technology>
+        <rationale>Same infra as product, edge CDN, zero cold starts</rationale>
+      </layer>
+      <layer name="Analytics">
+        <technology>Plausible or existing GA4/GTM</technology>
+        <rationale>Privacy-friendly option or keep existing tracking</rationale>
+      </layer>
+      <layer name="Forms">
+        <technology>HubSpot Embed or API</technology>
+        <rationale>Keep existing CRM integration</rationale>
+      </layer>
+      <layer name="Animation">
+        <technology>Motion One + CSS Transitions</technology>
+        <rationale>~5KB total vs ~55KB for Framer Motion + GSAP. Meets PageSpeed 95+ target.</rationale>
+      </layer>
+    </tech-stack>
+    
+    <directory-structure>
+      <![CDATA[
+beings-website/                      # Repository (beings-marketing)
+├── astro.config.mjs                 # Astro configuration
+├── tailwind.config.mjs              # Tailwind with brand tokens
+├── package.json
+├── wrangler.toml                    # Cloudflare Pages config
+│
+├── docs/
+│   ├── bw-prd-01-rebrand.xml  # This PRD (Source of Truth)
+│   └── screenshots/                 # Reference images
+│       ├── product-reference.png    # Full product screenshot
+│       ├── product-rail.png         # Rail detail reference
+│       └── shell-final.png          # Verified shell implementation
+│
+├── src/
+│   ├── assets/
+│   │   └── logo.svg                 # Shared with product
+│   │
+│   ├── styles/
+│   │   ├── brand-tokens.css         # SSOT: Colors, radii, shadows, motion
+│   │   ├── app-shell.css            # Shell layout tokens (refs brand-tokens)
+│   │   └── global.css               # Base styles (imports above)
+│   │
+│   ├── components/
+│   │   ├── app-shell/               # ★ PRODUCT REPLICA COMPONENTS
+│   │   │   ├── AppShell.astro       # Root grid layout (rail + main)
+│   │   │   ├── SidebarRail.astro    # 80px nav rail with icons
+│   │   │   └── MainPanel.astro      # White floating content panel
+│   │   │
+│   │   ├── layout/
+│   │   │   ├── Header.astro
+│   │   │   ├── Footer.astro
+│   │   │   ├── Layout.astro
+│   │   │   └── MobileMenu.tsx       # React island for mobile nav
+│   │   │
+│   │   ├── marketing/
+│   │   │   ├── Hero.astro
+│   │   │   ├── FeatureGrid.astro
+│   │   │   ├── Testimonial.astro
+│   │   │   ├── PricingTable.astro
+│   │   │   ├── CTASection.astro
+│   │   │   └── ProductScreenshot.astro
+│   │   │
+│   │   └── islands/                 # React components (interactive)
+│   │       ├── CostCalculator.tsx   # Migrated from WP plugin
+│   │       ├── ContactForm.tsx      # HubSpot integration
+│   │       └── ProductDemo.tsx      # Embedded product preview
+│   │
+│   ├── pages/
+│   │   ├── index.astro              # Homepage
+│   │   ├── shell-test.astro         # Shell verification page
+│   │   ├── about.astro
+│   │   ├── pricing.astro
+│   │   ├── contact.astro
+│   │   └── blog/
+│   │       ├── index.astro          # Blog listing
+│   │       └── [...slug].astro      # Dynamic blog posts
+│   │
+│   └── content/
+│       ├── config.ts                # Astro content collections
+│       └── blog/
+│           ├── 2026-01-23-qualitative-coding.mdx
+│           └── ...                  # Migrated from WordPress
+│
+├── public/
+│   ├── favicon.ico
+│   ├── og-image.png
+│   └── robots.txt
+│
+└── scripts/
+    └── migrate-wp-posts.ts          # One-time WordPress export
+      ]]>
+    </directory-structure>
+  </architecture>
+
+  <brand-tokens>
+    <description>
+      <![CDATA[
+      Extract design tokens from the product (beings/src/theme/*) to ensure
+      brand continuity. The marketing site should FEEL like the same brand
+      while being optimized for a different job (conversion vs data manipulation).
+      ]]>
+    </description>
+    
+    <colors>
+      <!-- From beings/src/theme/palette.ts -->
+      <color name="primary" light="#5B6FCC" dark="#A1B2F8">Sophisticated Blue</color>
+      <color name="primary-light" light="#8D9EE8" dark="#C4D0FF">Primary Light</color>
+      <color name="primary-dark" light="#3E4B99" dark="#7B8FE8">Primary Dark</color>
+      <color name="secondary" light="#7E57C2" dark="#C8C7FA">Academic Purple</color>
+      <color name="background" light="#F0F4F9" dark="#12121E">Canvas (Gemini Gray / Deep Navy)</color>
+      <color name="surface" light="#FFFFFF" dark="#1E1E2D">Elevated Surface</color>
+      <color name="text-primary" light="#1A1D2E" dark="#EAEAF2">Primary Text</color>
+      <color name="text-secondary" light="#4A5568" dark="#B8B8D1">Secondary Text</color>
+      <color name="divider" light="#E2E8F0" dark="#2A2A3E">Borders</color>
+      <color name="brand-blue" value="#006DCC">Logo Blue (from SVG)</color>
+    </colors>
+    
+    <typography>
+      <!-- From beings/src/theme/typography.ts -->
+      <font-family>
+        "'Roboto Flex', 'Helvetica', 'Arial', sans-serif"
+      </font-family>
+      <scale>
+        <variant name="h1" size="3rem" weight="700" line-height="1.2"/>
+        <variant name="h2" size="2.5rem" weight="700" line-height="1.3"/>
+        <variant name="h3" size="2rem" weight="600" line-height="1.4"/>
+        <variant name="h4" size="1.5rem" weight="600" line-height="1.4"/>
+        <variant name="body" size="1rem" weight="400" line-height="1.6"/>
+        <variant name="small" size="0.875rem" weight="400" line-height="1.6"/>
+      </scale>
+    </typography>
+    
+    <spacing>
+      <!-- 8px grid system from product -->
+      <unit>8px</unit>
+      <scale>1, 2, 3, 4, 5, 6, 8, 10, 12, 16</scale>
+    </spacing>
+    
+    <motion>
+      <!-- From beings/src/theme/m3Tokens.ts -->
+      <easing name="standard">cubic-bezier(0.4, 0, 0.2, 1)</easing>
+      <easing name="emphasized">cubic-bezier(0.2, 0, 0, 1)</easing>
+      <easing name="decelerate">cubic-bezier(0.05, 0.7, 0.1, 1)</easing>
+      <duration name="fast">150ms</duration>
+      <duration name="medium">300ms</duration>
+    </motion>
+    
+    <shape>
+      <!-- From beings/src/theme/m3Tokens.ts -->
+      <radius name="none">0</radius>
+      <radius name="extra-small">4px</radius>
+      <radius name="small">8px</radius>
+      <radius name="medium">12px</radius>
+      <radius name="large">16px</radius>
+      <radius name="xl">28px</radius>
+      <radius name="full">9999px</radius>
+      
+      <!-- CRITICAL: Component-to-radius mapping -->
+      <usage>
+        <component type="buttons">small (8px)</component>
+        <component type="inputs">small (8px)</component>
+        <component type="cards">medium (12px)</component>
+        <component type="dialogs">medium (12px)</component>
+        <component type="large-cards">large (16px)</component>
+        <component type="floating-panels">large (16px) or xl (28px)</component>
+        <component type="pills-chips">full (9999px) - stadium shape</component>
+        <component type="composer-input">xl (28px) - Gemini aesthetic</component>
+      </usage>
+    </shape>
+    
+    <elevation>
+      <!-- 
+        M3 Elevation System from beings/src/theme/m3Tokens.ts
+        The product uses SUBTLE shadows. Avoid heavy drop shadows.
+      -->
+      <level name="0" value="none">Flat surfaces</level>
+      <level name="1" value="0 1px 2px rgba(0,0,0,0.05)">Cards, sheets</level>
+      <level name="2" value="0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)">Menus, app bars</level>
+      <level name="3" value="0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06)">Dialogs, floating panels</level>
+      <level name="4" value="0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05)">FAB hover, prominent elements</level>
+      
+      <!-- Anti-pattern: Do NOT use heavy shadows like these -->
+      <avoid>
+        <shadow>box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25)</shadow>
+        <reason>Too heavy, looks dated and "Bootstrap-y"</reason>
+      </avoid>
+    </elevation>
+    
+    <state-layers>
+      <!-- 
+        M3 State Layer Opacities from beings/src/theme/m3Tokens.ts
+        State layers are semi-transparent overlays for interaction feedback.
+      -->
+      <state name="hover" opacity="0.08">Mouse hover state</state>
+      <state name="focus" opacity="0.10">Keyboard focus state</state>
+      <state name="pressed" opacity="0.12">Active press/click state</state>
+      <state name="dragged" opacity="0.16">Drag state for reorderable items</state>
+      <state name="disabled" opacity="0.38">Disabled component opacity</state>
+    </state-layers>
+    
+    <token-architecture>
+      <![CDATA[
+      TOKEN ARCHITECTURE (SSOT Chain)
+      
+      The marketing site uses a two-file token system to maintain DRY principles
+      while enabling pixel-perfect product replication:
+      
+      ┌─────────────────────────────────────────────────────────────────┐
+      │  PRODUCT (beings/src/theme/*)                                   │
+      │  palette.ts, m3Tokens.ts, layout-constants.ts                   │
+      └─────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+      ┌─────────────────────────────────────────────────────────────────┐
+      │  brand-tokens.css (SSOT for marketing site)                     │
+      │  Colors, radii, shadows, motion, state layers, spacing          │
+      │  Dark mode auto-switches via [data-theme="dark"]                │
+      └─────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+      ┌─────────────────────────────────────────────────────────────────┐
+      │  app-shell.css (Shell-specific tokens)                          │
+      │  References brand-tokens.css for all design values              │
+      │  Defines ONLY shell layout dimensions:                          │
+      │  - --shell-rail-width: 5rem (80px)                              │
+      │  - --shell-panel-radius: var(--radius-md)                       │
+      │  - --shell-panel-border-width: 3.75px                           │
+      │  - --shell-icon-button-size: 48px                               │
+      └─────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+      ┌─────────────────────────────────────────────────────────────────┐
+      │  Components (AppShell.astro, SidebarRail.astro, etc.)           │
+      │  Use --shell-* tokens for layout, inherit colors/motion         │
+      └─────────────────────────────────────────────────────────────────┘
+      
+      RULES:
+      1. brand-tokens.css is the SSOT - never duplicate values elsewhere
+      2. app-shell.css REFERENCES brand-tokens, doesn't redefine
+      3. Components use --shell-* tokens (semantic naming)
+      4. When product changes, update brand-tokens.css first
+      
+      Last synced with product: 2026-01-23
+      ]]>
+    </token-architecture>
+  </brand-tokens>
+  
+  <visual-philosophy>
+    <description>
+      <![CDATA[
+      The marketing site must FEEL like the same product. This section defines
+      the visual DNA that makes Beings look like "a tool" rather than "a website."
+      
+      Source: beings/src/theme/*, beings/src/layouts/*
+      ]]>
+    </description>
+    
+    <canvas-and-card>
+      <![CDATA[
+      KEY CONCEPT: "Canvas + Card" Layout
+      
+      The product uses a distinctive visual pattern:
+      1. CANVAS: Light gray background (#F0F4F9 "Gemini Gray") provides breathing room
+      2. CARD: White floating panels (#FFFFFF) contain content with subtle elevation
+      3. DEPTH: The card "floats" above the canvas, creating visual hierarchy
+      
+      This creates the "app-like" feel that distinguishes modern SaaS from generic websites.
+      
+      IMPLEMENTATION:
+      - Page background: var(--color-background) #F0F4F9
+      - Content panels: var(--color-surface) #FFFFFF with border-radius: 16px
+      - Subtle shadow: elevation level 2 or 3
+      - DO NOT use full-width colored sections that span edge-to-edge
+      ]]>
+    </canvas-and-card>
+    
+    <anti-patterns>
+      <![CDATA[
+      AVOID these "generic SaaS" patterns:
+      
+      1. HEAVY GRADIENTS: No purple-to-blue gradients spanning full sections
+         → Instead: Solid colors or very subtle gradients within cards
+      
+      2. BLOCKY SECTIONS: No full-width colored bands alternating down the page
+         → Instead: Content in floating cards on gray canvas
+      
+      3. OVERSIZED RADII: No rounded-3xl or rounded-full on large elements
+         → Instead: Use M3 radius scale (8/12/16/28px)
+      
+      4. THICK BORDERS: No 2px+ borders on cards
+         → Instead: 1px var(--color-divider) or elevation shadow only
+      
+      5. TEXT TRANSFORM: No UPPERCASE button text
+         → Instead: textTransform: 'none' (sentence case)
+      
+      6. BLURRY GLASS: No backdrop-filter blur effects for headers
+         → Instead: Solid white with subtle shadow
+      ]]>
+    </anti-patterns>
+    
+    <header-style>
+      <![CDATA[
+      HEADER AESTHETIC:
+      
+      The product header (AppBar) is:
+      - Transparent background on canvas
+      - Solid white when scrolled (no blur)
+      - Subtle shadow on scroll: elevation level 2
+      - Clean, minimal - not a design statement
+      
+      For marketing, adapt as:
+      - Sticky position
+      - bg-surface (white) with elevation-2 shadow
+      - OR transparent over hero, solid white after scroll
+      - NO backdrop-blur - it looks messy with our palette
+      ]]>
+    </header-style>
+    
+    <button-style>
+      <![CDATA[
+      BUTTON AESTHETIC (from beings/src/theme/components.ts):
+      
+      - Border radius: 8px (small)
+      - Text transform: none (not uppercase)
+      - Font weight: 600 (semibold, not bold)
+      - Press effect: scale(0.98) on :active
+      - Transitions: 150ms ease-in-out
+      
+      Primary button:
+      - Background: var(--color-primary)
+      - Text: white
+      - Hover: var(--color-primary-light)
+      
+      Secondary/Outlined button:
+      - Background: transparent
+      - Border: 1px solid var(--color-divider)
+      - Text: var(--color-text-primary)
+      - Hover: background with state-layer opacity 0.08
+      ]]>
+    </button-style>
+  </visual-philosophy>
+
+  <animation-strategy>
+    <description>
+      <![CDATA[
+      Performance-optimized animation strategy for the Astro 4.x architecture.
+      Designed to meet PageSpeed 95+ target while enabling rich product demos.
+      
+      CONSTRAINT: Total animation library payload must stay under 10KB gzipped.
+      ]]>
+    </description>
+    
+    <tool-allocation>
+      <!-- 
+        Each layer uses the minimal tool for the job.
+        Heavy libraries (Framer Motion ~30KB, GSAP ~25KB) are explicitly avoided.
+      -->
+      <layer name="Marketing Pages" technology="CSS / Tailwind">
+        <![CDATA[
+        Standard CSS transitions for hover states, focus rings, button presses.
+        Uses M3 motion tokens from brand-tokens.css.
+        
+        Example: Button hover, card hover, link underlines
+        Payload: 0KB (native CSS)
+        ]]>
+      </layer>
+      
+      <layer name="Page Transitions" technology="Astro View Transitions">
+        <![CDATA[
+        Native Astro feature for navigation between pages.
+        No additional libraries required.
+        
+        Example: Home → Blog, Pricing → Contact
+        Payload: 0KB (browser API)
+        Browser support: ~75% (graceful fallback to normal navigation)
+        ]]>
+      </layer>
+      
+      <layer name="App Shell Layout" technology="CSS Transitions">
+        <![CDATA[
+        Replaces Framer Motion for simple layout changes.
+        CSS variables + transition property for sidebar collapse/expand.
+        
+        Example implementation:
+        .sidebar {
+          width: var(--sidebar-width-closed);
+          transition: width var(--duration-medium) var(--ease-standard);
+        }
+        .sidebar[data-open="true"] {
+          width: var(--sidebar-width-open);
+        }
+        
+        Payload: 0KB (native CSS)
+        ]]>
+      </layer>
+      
+      <layer name="Enter/Exit Animations" technology="Motion One">
+        <![CDATA[
+        Lightweight alternative to Framer Motion for complex staggers.
+        Used inside React islands for panel entrances, chip animations.
+        
+        Package: motion (npm install motion)
+        Alternative: @motionone/react for React-specific bindings
+        
+        Example: Staggered panel entrance, Aida chips appearing
+        Payload: ~4KB gzipped
+        ]]>
+      </layer>
+      
+      <layer name="Streaming Text" technology="Vanilla JS Hook">
+        <![CDATA[
+        Replaces GSAP for typing/streaming effects.
+        Custom useTypewriter React hook using requestAnimationFrame.
+        
+        Location: src/hooks/useTypewriter.ts
+        
+        Example: Aida chat message appearing character-by-character
+        Payload: ~0.5KB
+        ]]>
+      </layer>
+    </tool-allocation>
+    
+    <payload-comparison>
+      <![CDATA[
+      BEFORE (Heavy Libraries):
+      ┌─────────────────────────────────────────────────────┐
+      │ Framer Motion        ~30KB gzip                     │
+      │ GSAP                 ~25KB gzip                     │
+      │ TOTAL                ~55KB gzip  ⚠️ Risk to 95+     │
+      └─────────────────────────────────────────────────────┘
+      
+      AFTER (Performance Optimized):
+      ┌─────────────────────────────────────────────────────┐
+      │ Motion One           ~4KB gzip                      │
+      │ useTypewriter hook   ~0.5KB gzip                    │
+      │ CSS Transitions      0KB                            │
+      │ TOTAL                ~5KB gzip   ✅ Safe            │
+      └─────────────────────────────────────────────────────┘
+      ]]>
+    </payload-comparison>
+    
+    <island-architecture>
+      <![CDATA[
+      INTERACTIVE ISLAND PATTERN
+      
+      The animated App Shell demo is a self-contained React island.
+      Animation libraries only load when the user scrolls to the demo.
+      
+      ┌─────────────────────────────────────────────────────────────┐
+      │  src/pages/index.astro (Static HTML - 0KB JS)               │
+      │                                                             │
+      │  <section class="hero">                                     │
+      │    <h1>Static marketing content</h1>  ← No JS, SEO-friendly │
+      │  </section>                                                 │
+      │                                                             │
+      │  <section class="demo-container">                           │
+      │    <AppShellDemo client:visible />   ← Hydrates on scroll   │
+      │  </section>                                                 │
+      │                                                             │
+      └─────────────────────────────────────────────────────────────┘
+      
+      HYDRATION DIRECTIVES:
+      - client:visible — Loads JS when element enters viewport (recommended)
+      - client:load — Loads JS immediately on page load (for above-fold)
+      - client:idle — Loads JS when browser is idle
+      
+      The demo island contains:
+      - React state (isSidebarOpen, messages, etc.)
+      - Motion One for panel entrances
+      - useTypewriter for chat streaming
+      - All state is SELF-CONTAINED (no Astro ↔ React state passing)
+      ]]>
+    </island-architecture>
+    
+    <shared-motion-package>
+      <![CDATA[
+      SHARED ANIMATION ASSETS (DRY Principle)
+      
+      Motion tokens and utilities can be shared between the marketing site
+      and the main product to ensure consistent animation feel.
+      
+      SHARING LEVELS:
+      ┌───────────────────────────────────────────────────────────────┐
+      │ Level 1: CSS Variables (tokens.css)        — Low coupling    │
+      │ Level 2: CSS Keyframes (keyframes.css)     — Low coupling    │
+      │ Level 3: Animation Configs (variants.ts)   — Medium coupling │
+      │ Level 4: Hooks (useTypewriter.ts)          — Medium coupling │
+      │ Level 5: Full Components                   — High coupling   │
+      └───────────────────────────────────────────────────────────────┘
+      
+      RECOMMENDED STRUCTURE (if shared package created):
+      
+      packages/@beings/motion/
+      ├── tokens.css          # CSS variables (easings, durations)
+      ├── keyframes.css       # Reusable @keyframes definitions
+      ├── variants.ts         # Framework-agnostic animation configs
+      ├── hooks/
+      │   ├── useTypewriter.ts
+      │   └── useStaggerChildren.ts
+      └── index.ts
+      
+      INITIAL APPROACH:
+      Start by sharing tokens.css and keyframes.css (copy between repos).
+      Graduate to npm package if sharing proves valuable.
+      
+      DO NOT SHARE:
+      - MUI-specific transition components (product only)
+      - Tailwind utility classes (different styling systems)
+      - Full animated React components (different component libraries)
+      ]]>
+    </shared-motion-package>
+    
+    <m3-motion-tokens>
+      <![CDATA[
+      M3 MOTION TOKENS (Must match product)
+      
+      These values ensure animations FEEL the same as the product,
+      regardless of which animation library implements them.
+      
+      EASINGS (from beings/src/theme/m3Tokens.ts):
+      --ease-standard:   cubic-bezier(0.4, 0, 0.2, 1)   /* Most transitions */
+      --ease-emphasized: cubic-bezier(0.2, 0, 0, 1)     /* Attention-grabbing */
+      --ease-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1) /* Enter animations */
+      
+      DURATIONS:
+      --duration-fast:   150ms   /* Micro-interactions (button press) */
+      --duration-medium: 300ms   /* Standard transitions (panel slide) */
+      --duration-long:   500ms   /* Complex/large movements */
+      
+      MUI COMPATIBILITY:
+      MUI uses react-transition-group + CSS internally.
+      It doesn't have a proprietary animation engine.
+      As long as we use the same easing curves and durations,
+      animations will look identical whether implemented with
+      CSS, Motion One, or Framer Motion.
+      ]]>
+    </m3-motion-tokens>
+    
+    <implementation-checklist>
+      <![CDATA[
+      SETUP:
+      1. [ ] npm install motion (Motion One) — DO NOT install framer-motion or gsap
+      2. [ ] Create src/hooks/useTypewriter.ts
+      3. [ ] Add motion tokens to brand-tokens.css (if not present)
+      4. [ ] Configure Tailwind with motion-related utilities
+      
+      COMPONENTS:
+      5. [ ] Create src/components/islands/AppShellDemo.tsx
+      6. [ ] Implement sidebar collapse with CSS transitions
+      7. [ ] Implement panel entrances with Motion One
+      8. [ ] Implement chat typing with useTypewriter hook
+      
+      VERIFICATION:
+      9. [ ] Lighthouse audit: Animation JS < 10KB
+      10. [ ] Visual comparison: Matches product motion feel
+      11. [ ] Mobile test: Animations don't cause jank
+      ]]>
+    </implementation-checklist>
+    
+    <anti-patterns>
+      <![CDATA[
+      AVOID:
+      
+      1. Framer Motion for simple transitions
+         → Use CSS transitions instead (0KB)
+      
+      2. GSAP for typing effects
+         → Use vanilla JS with requestAnimationFrame (~0.5KB)
+      
+      3. Animation libraries in non-island components
+         → Keep marketing pages JS-free where possible
+      
+      4. Passing animation state between Astro and React
+         → Keep island state self-contained
+      
+      5. Spring physics libraries (react-spring, etc.)
+         → M3 uses CSS bezier curves, not spring physics
+      ]]>
+    </anti-patterns>
+  </animation-strategy>
+
+  <app-shell-strategy>
+    <description>
+      <![CDATA[
+      The marketing site is built "shell-first" - starting with a pixel-perfect
+      replica of the product's app shell, then layering marketing content inside.
+      
+      This approach enables a future "seamless transition" where the real product
+      can be lazy-loaded in the background, allowing instant app access.
+      ]]>
+    </description>
+    
+    <rationale>
+      <![CDATA[
+      WHY SHELL-FIRST?
+      
+      1. BRAND CONTINUITY: The shell IS the product's visual identity
+      2. LAZY-LOAD VISION: Background-download real app for seamless transition
+      3. SINGLE SOURCE: Same CSS tokens = automatic visual alignment
+      4. TRUST SIGNAL: Marketing that looks like the product builds confidence
+      
+      The goal is for visitors to feel they're already "inside the product"
+      before they've even signed up.
+      ]]>
+    </rationale>
+    
+    <shell-anatomy>
+      <![CDATA[
+      PRODUCT SHELL ANATOMY (from beings/src/layouts/*)
+      
+      ┌────────────────────────────────────────────────────────────────┐
+      │  .app-shell (CSS Grid)                                         │
+      │  display: grid                                                 │
+      │  grid-template-columns: 80px 1fr                               │
+      │  height: 100dvh                                                │
+      │  background: var(--shell-canvas) #F0F4F9                       │
+      │                                                                │
+      │  ┌──────────┐ ┌──────────────────────────────────────────────┐ │
+      │  │.sidebar- │ │ .shell-main                                  │ │
+      │  │ rail     │ │ padding: 8px (creates gray gap around panel) │ │
+      │  │          │ │                                              │ │
+      │  │ 80px     │ │ ┌────────────────────────────────────────┐   │ │
+      │  │ sticky   │ │ │ .main-panel                            │   │ │
+      │  │ 100dvh   │ │ │ background: white                      │   │ │
+      │  │          │ │ │ border-radius: 12px (uniform)          │   │ │
+      │  │ hamburger│ │ │ border: 3.75px solid canvas            │   │ │
+      │  │ workspaces│ │ │                                        │   │ │
+      │  │ ──────── │ │ │ [MARKETING CONTENT GOES HERE]          │   │ │
+      │  │ trash    │ │ │                                        │   │ │
+      │  │ settings │ │ └────────────────────────────────────────┘   │ │
+      │  └──────────┘ └──────────────────────────────────────────────┘ │
+      └────────────────────────────────────────────────────────────────┘
+      
+      KEY DIMENSIONS (from DevTools inspection):
+      - Rail width: 80px (5rem)
+      - Panel radius: 12px (uniform all corners)
+      - Panel border: 3.75px solid canvas (creates floating effect)
+      - Content padding: 8px (MUI theme.spacing(1))
+      - Icon button size: 48px
+      - Icon size: 24px
+      - Rail border: 0.625px solid divider (right edge)
+      
+      KEY BEHAVIORS:
+      - Sidebar sticky at 100dvh (viewport locked)
+      - Main panel fills remaining space
+      - App shell height constrained to 100dvh (no overflow)
+      ]]>
+    </shell-anatomy>
+    
+    <shell-components>
+      <component name="AppShell.astro" status="complete">
+        <![CDATA[
+        Root layout wrapper with CSS Grid.
+        - grid-template-columns: var(--shell-rail-width) 1fr
+        - height: 100dvh (viewport locked)
+        - overflow: hidden (no scrollbars on shell itself)
+        
+        Contains: SidebarRail + shell-main wrapper + MainPanel
+        ]]>
+      </component>
+      
+      <component name="SidebarRail.astro" status="complete">
+        <![CDATA[
+        80px fixed navigation rail (collapsed state).
+        
+        Structure:
+        - rail-content: hamburger + workspace icons (flex-1)
+        - rail-footer: trash + settings (border-top separator)
+        
+        Icons: Filled MUI-style SVGs (not stroked)
+        States: hover (8% overlay), active (10% primary tint + blue icon)
+        ]]>
+      </component>
+      
+      <component name="MainPanel.astro" status="complete">
+        <![CDATA[
+        White floating content panel.
+        
+        - background: var(--shell-surface) white
+        - border-radius: 12px (uniform)
+        - border: 3.75px solid var(--shell-canvas)
+        - overflow: hidden (panel-content scrolls)
+        
+        Contains <slot /> for marketing content.
+        ]]>
+      </component>
+    </shell-components>
+    
+    <lazy-load-vision>
+      <![CDATA[
+      FUTURE: Seamless App Transition
+      
+      The pixel-perfect shell enables a "lazy-load" pattern:
+      
+      1. Visitor lands on marketing site (static Astro)
+      2. Background: Service worker preloads real product bundle
+      3. User clicks "Try It" → shell "morphs" into real app
+      4. No page reload, instant transition
+      
+      REQUIREMENTS FOR THIS TO WORK:
+      - Marketing shell must be PIXEL-PERFECT match
+      - Same CSS tokens (already achieved via SSOT)
+      - Same HTML structure for shell elements
+      - Hydration replaces static components with React
+      
+      This is why we cannot simplify the shell - the precision IS the feature.
+      ]]>
+    </lazy-load-vision>
+  </app-shell-strategy>
+
+  <component-inventory>
+    <description>
+      <![CDATA[
+      Marketing components needed for the rebrand. These are NOT ports of
+      Elementor widgets - they are purpose-built for conversion.
+      
+      Components are organized by category:
+      - App Shell: Pixel-perfect product replica (foundation)
+      - Layout: Page-level wrappers
+      - Marketing: Content blocks for conversion
+      - Interactive: React islands for dynamic features
+      ]]>
+    </description>
+    
+    <category name="App Shell">
+      <component name="AppShell" priority="P0" status="complete">
+        <![CDATA[
+        Root layout wrapper for shell-first pages.
+        
+        IMPLEMENTS: CSS Grid layout matching product FlatMainLayout.tsx
+        - Gray canvas background (100dvh viewport)
+        - Sidebar rail (80px) + main content area
+        - Content area has 8px padding for floating panel effect
+        
+        USAGE:
+        <AppShell>
+          <!-- Marketing content here -->
+        </AppShell>
+        
+        Props:
+        - hideRail: boolean (hide sidebar for certain pages)
+        - class: string (additional styling)
+        ]]>
+      </component>
+      
+      <component name="SidebarRail" priority="P0" status="complete">
+        <![CDATA[
+        80px vertical navigation rail (collapsed state).
+        
+        IMPLEMENTS: Product NavigationRailHeader.tsx + Sidebar.tsx
+        
+        Structure:
+        - Header: Hamburger button (no logo)
+        - Nav: Personal workspace (active), Org workspaces (disabled)
+        - Footer: Trash + Settings (with border-top separator)
+        
+        Icons: Filled MUI-style SVGs
+        - Hamburger: text-primary color
+        - Active: primary color (10% tint bg)
+        - Disabled: 60% opacity, action.disabled color
+        
+        KEY DETAILS:
+        - height: 100dvh (sticky, viewport locked)
+        - align-items: flex-start (left-aligned, not centered)
+        - padding: 12px top/bottom, 16px left
+        - border-right: 0.625px solid divider
+        ]]>
+      </component>
+      
+      <component name="MainPanel" priority="P0" status="complete">
+        <![CDATA[
+        White floating content panel inside the shell.
+        
+        IMPLEMENTS: Product panel aesthetics from Dockview groups
+        
+        Styling:
+        - background: white
+        - border-radius: 12px (uniform all corners)
+        - border: 3.75px solid canvas-color (floating effect)
+        - No shadow (product doesn't use shadow on main panel)
+        
+        Contains <slot /> for marketing content.
+        Panel-content area scrolls independently.
+        ]]>
+      </component>
+    </category>
+    
+    <category name="Layout">
+      <component name="Header" priority="P0">
+        <![CDATA[
+        Navigation bar with logo, links, CTA button.
+        
+        VISUAL SPEC (from product AppBar):
+        - Sticky position with z-index above content
+        - Background: var(--color-surface) solid white (NO blur)
+        - Shadow on scroll: elevation-2 (subtle)
+        - Height: 64px desktop, 56px mobile
+        - Content: max-width container, centered
+        
+        ELEMENTS:
+        - Logo (left): links to home
+        - Nav links (center/right): Product, Solutions, Pricing, About
+        - CTA button (right): "Get Started" - primary style, radius-small (8px)
+        - Mobile: hamburger menu → React island for state
+        
+        DO NOT:
+        - Use backdrop-blur (looks messy)
+        - Use gradient backgrounds
+        - Make the header a design statement (keep it clean)
+        ]]>
+      </component>
+      <component name="Footer" priority="P0">
+        Logo, navigation links, social icons, legal links, newsletter signup.
+        Background: var(--color-background) gray canvas, not a colored band.
+      </component>
+      <component name="Layout" priority="P0">
+        Base layout wrapper with Header, Footer, SEO meta tags.
+        Page background: var(--color-background) #F0F4F9 (Gemini Gray).
+      </component>
+    </category>
+    
+    <category name="Hero Sections">
+      <component name="HeroMain" priority="P0">
+        <![CDATA[
+        Homepage hero implementing "Canvas + Card" aesthetic.
+        
+        VISUAL SPEC:
+        - Background: var(--color-background) gray canvas
+        - Content: centered in a floating white card OR text directly on canvas
+        - NO heavy gradients - if gradient needed, keep it very subtle
+        
+        LAYOUT OPTION A - "Floating Panel":
+        - Gray canvas background
+        - White card (radius-large 16px, elevation-3) contains hero content
+        - Creates depth and matches product workspace feel
+        
+        LAYOUT OPTION B - "Clean Canvas":
+        - Gray canvas background
+        - Text directly on canvas (no card)
+        - Product screenshot in a white card below
+        
+        ELEMENTS:
+        - H1: Large headline with optional primary-colored word
+        - Subtitle: var(--color-text-secondary), max 2 lines
+        - Dual CTAs: Primary button + Secondary/outlined button
+        - Product visual: Screenshot in elevated card OR video
+        
+        DO NOT:
+        - Use purple-to-blue gradient backgrounds
+        - Make buttons rounded-full (use radius-small 8px)
+        - Add excessive decoration or flourishes
+        ]]>
+      </component>
+      <component name="HeroSimple" priority="P1">
+        Interior page hero: H1, breadcrumbs, optional subtitle.
+        Background: var(--color-background) gray canvas.
+        Content: centered, no card wrapper needed.
+      </component>
+    </category>
+    
+    <category name="Content Blocks">
+      <component name="FeatureGrid" priority="P0">
+        <![CDATA[
+        3-column grid of feature cards.
+        
+        VISUAL SPEC:
+        - Container: on gray canvas OR inside a white section card
+        - Cards: var(--color-surface) white, radius-medium (12px)
+        - Border: 1px var(--color-divider) OR elevation-1 shadow (pick one)
+        - Icons: 24px, var(--color-primary) or var(--color-text-secondary)
+        
+        CARD CONTENT:
+        - Icon (top): simple, not elaborate
+        - Title: h4 size, font-weight-600
+        - Description: body text, var(--color-text-secondary)
+        
+        SPACING:
+        - Card padding: 24px (p-6)
+        - Grid gap: 24px (gap-6)
+        
+        DO NOT:
+        - Use emoji as icons (use Lucide/Heroicons)
+        - Add hover transforms or heavy shadows
+        - Make cards too tall (keep content concise)
+        ]]>
+      </component>
+      <component name="FeatureShowcase" priority="P1">
+        Alternating image/text sections for detailed feature explanation.
+      </component>
+      <component name="Testimonial" priority="P1">
+        Customer quote with avatar, name, company, optional logo.
+      </component>
+      <component name="TestimonialCarousel" priority="P2">
+        Swipeable testimonial slider for mobile.
+      </component>
+      <component name="LogoCloud" priority="P1">
+        "Trusted by" section with customer/partner logos.
+      </component>
+      <component name="StatsBar" priority="P2">
+        Key metrics display (e.g., "10,000+ researchers").
+      </component>
+    </category>
+    
+    <category name="Conversion">
+      <component name="PricingTable" priority="P0">
+        <![CDATA[
+        Pricing tiers with feature comparison, CTA buttons.
+        
+        VISUAL SPEC:
+        - Container: on gray canvas
+        - Cards: white surface, radius-medium (12px), elevation-2
+        - Recommended tier: subtle primary border or background tint
+        - Toggle: radius-full (pill shape) for monthly/annual switch
+        
+        DO NOT:
+        - Use heavy shadows or gradients on cards
+        - Make one card dramatically larger than others
+        ]]>
+      </component>
+      <component name="CTASection" priority="P0">
+        <![CDATA[
+        Call-to-action section for page bottoms.
+        
+        VISUAL SPEC (CRITICAL - avoid heavy gradients):
+        
+        OPTION A - "Card CTA":
+        - Gray canvas background (continues from page)
+        - White card with radius-large (16px), elevation-2
+        - Centered headline + button inside card
+        
+        OPTION B - "Primary CTA":
+        - Solid var(--color-primary) background (no gradient)
+        - White text, white outlined button
+        - Keep it clean and confident
+        
+        DO NOT:
+        - Use purple-to-blue gradient (looks dated)
+        - Make the section too tall (compact is better)
+        - Add decorative elements or patterns
+        
+        ELEMENTS:
+        - Headline: H2 or H3 size
+        - Optional subtext: 1 line max
+        - Single CTA button: prominent, radius-small (8px)
+        ]]>
+      </component>
+      <component name="ContactForm" priority="P0" type="island">
+        <![CDATA[
+        React component with HubSpot API integration.
+        
+        VISUAL SPEC:
+        - Container: white card on gray canvas, radius-medium (12px)
+        - Inputs: radius-small (8px), 1px border var(--color-divider)
+        - Focus state: primary color border, subtle shadow
+        - Button: primary style, radius-small (8px)
+        
+        Form validation, loading states, success message.
+        ]]>
+      </component>
+    </category>
+    
+    <category name="Interactive (React Islands)">
+      <component name="CostCalculator" priority="P1" type="island">
+        Migrate from WordPress plugin. React component with
+        pricing inputs, calculation logic, result display.
+      </component>
+      <component name="ProductDemo" priority="P2" type="island">
+        Embedded preview of product UI. Could be iframe or
+        simplified React component.
+      </component>
+      <component name="VideoPlayer" priority="P2" type="island">
+        Lazy-loaded video with custom controls, Vimeo/YouTube embed.
+      </component>
+    </category>
+    
+    <category name="Blog">
+      <component name="BlogCard" priority="P1">
+        Post preview with featured image, title, excerpt, date.
+      </component>
+      <component name="BlogPost" priority="P1">
+        Full article layout with MDX rendering, table of contents,
+        author info, related posts.
+      </component>
+      <component name="AuthorCard" priority="P2">
+        Author bio with avatar, social links.
+      </component>
+    </category>
+  </component-inventory>
+
+  <content-migration>
+    <description>
+      <![CDATA[
+      One-time migration of blog content from WordPress to MDX files.
+      Pages will be redesigned from scratch (not migrated).
+      ]]>
+    </description>
+    
+    <blog-posts>
+      <strategy>
+        <![CDATA[
+        1. Export posts via WordPress REST API (already connected via MCP)
+        2. Convert HTML content to Markdown using turndown
+        3. Extract metadata (title, date, author, categories) to frontmatter
+        4. Download featured images to local assets
+        5. Manual review for formatting issues
+        
+        Expected: ~50 blog posts, mostly clean HTML (not Elementor).
+        ]]>
+      </strategy>
+      
+      <frontmatter-schema>
+        <![CDATA[
+---
+title: "Types of Qualitative Coding in Research Methodology"
+description: "Learn about the different coding approaches..."
+pubDate: 2026-01-23
+updatedDate: 2026-01-23
+author: "beings-team"
+category: "methodology"
+tags: ["qualitative", "coding", "research"]
+image: "./images/qualitative-coding-hero.webp"
+---
+        ]]>
+      </frontmatter-schema>
+    </blog-posts>
+    
+    <pages status="redesign">
+      <![CDATA[
+      Pages will NOT be migrated - they will be redesigned from scratch.
+      The Elementor layouts are not portable and the rebrand requires
+      new visual design anyway.
+      
+      Key pages to build:
+      - Homepage (complete redesign)
+      - About (new design)
+      - Pricing (new design with PricingTable component)
+      - Contact (new design with HubSpot form)
+      - Product pages (CloudLab, Aida - new designs)
+      ]]>
+    </pages>
+    
+    <assets>
+      <![CDATA[
+      - Logo: Copy from beings/src/assets/logo.svg
+      - Product screenshots: Take fresh screenshots from product
+      - Stock images: Evaluate and replace with on-brand imagery
+      - Icons: Use Heroicons or Lucide (consistent with Tailwind ecosystem)
+      ]]>
+    </assets>
+  </content-migration>
+
+  <seo-strategy>
+    <description>
+      <![CDATA[
+      Replace RankMath Pro functionality with static-first SEO.
+      ]]>
+    </description>
+    
+    <meta-tags>
+      <approach>Frontmatter → Astro SEO component</approach>
+      <implementation>
+        <![CDATA[
+        Each page/post defines SEO in frontmatter:
+        
+        ---
+        title: "Page Title"
+        description: "Meta description under 160 chars"
+        canonical: "https://beings.com/page"
+        ogImage: "./og-image.png"
+        ---
+        
+        Layout.astro uses @astrojs/seo or custom <SEO /> component
+        to render all meta tags at build time.
+        ]]>
+      </implementation>
+    </meta-tags>
+    
+    <sitemap>
+      <approach>@astrojs/sitemap</approach>
+      <note>Auto-generated at build time, submitted to Search Console</note>
+    </sitemap>
+    
+    <structured-data>
+      <approach>JSON-LD in page components</approach>
+      <types>
+        <type>Organization (global)</type>
+        <type>WebSite (global)</type>
+        <type>Article (blog posts)</type>
+        <type>FAQPage (pricing, support pages)</type>
+        <type>Product (product pages)</type>
+      </types>
+    </structured-data>
+    
+    <redirects>
+      <approach>Cloudflare Pages _redirects file</approach>
+      <note>Map old WordPress URLs to new structure</note>
+    </redirects>
+  </seo-strategy>
+
+  <integrations>
+    <integration name="HubSpot" priority="P0">
+      <current>HubSpot All-In-One plugin + Content Embed</current>
+      <new>
+        <![CDATA[
+        1. Tracking: Paste HubSpot tracking code in Layout.astro <head>
+        2. Forms: Either embed HubSpot forms (iframe) or build custom
+           React forms that POST to HubSpot API
+        3. Chat: HubSpot chat widget via script tag
+        ]]>
+      </new>
+    </integration>
+    
+    <integration name="Analytics" priority="P0">
+      <current>GTM + Site Kit + GA4</current>
+      <new>
+        <![CDATA[
+        Option A: Keep GTM - paste container ID in Layout.astro
+        Option B: Switch to Plausible for privacy-friendly analytics
+        
+        Recommendation: Keep GTM for now to maintain marketing continuity.
+        ]]>
+      </new>
+    </integration>
+    
+    <integration name="Cookie Consent" priority="P0">
+      <current>CookieYes plugin</current>
+      <new>
+        <![CDATA[
+        Paste CookieYes script tag in Layout.astro.
+        Same functionality, no plugin.
+        ]]>
+      </new>
+    </integration>
+    
+    <integration name="Cost Calculator" priority="P1">
+      <current>Cost Calculator Builder plugin</current>
+      <new>
+        <![CDATA[
+        Rebuild as React component (island).
+        
+        Steps:
+        1. Document current calculator fields and formulas
+        2. Build CostCalculator.tsx with same logic
+        3. Style with Tailwind to match brand
+        4. Embed on pricing page with client:visible
+        ]]>
+      </new>
+    </integration>
+  </integrations>
+
+  <implementation-phases>
+    <phase id="P1" name="App Shell Foundation" duration="1-2 days" status="complete">
+      <description>
+        <![CDATA[
+        Build pixel-perfect replica of product shell as the visual foundation.
+        This is the "frame" that all marketing content will live inside.
+        ]]>
+      </description>
+      <deliverables>
+        <item status="complete">New repository: beings-website</item>
+        <item status="complete">Astro + Tailwind + TypeScript setup</item>
+        <item status="complete">Brand tokens CSS (brand-tokens.css)</item>
+        <item status="complete">Shell tokens CSS (app-shell.css)</item>
+        <item status="complete">AppShell.astro (grid layout)</item>
+        <item status="complete">SidebarRail.astro (80px rail with icons)</item>
+        <item status="complete">MainPanel.astro (floating white panel)</item>
+        <item status="complete">Shell verification page (/shell-test)</item>
+      </deliverables>
+      <success-criteria>
+        <![CDATA[
+        Shell visually indistinguishable from product when compared side-by-side.
+        Verified via DevTools inspection of:
+        - Rail width (80px), icon sizes (48px/24px), colors
+        - Panel radius (12px), border width (3.75px)
+        - Footer alignment, icon states, spacing
+        ]]>
+      </success-criteria>
+    </phase>
+    
+    <phase id="P2" name="Panel Components" duration="1-2 days" status="pending">
+      <description>
+        <![CDATA[
+        Build interior panel components that will contain marketing content.
+        These live INSIDE the MainPanel slot.
+        ]]>
+      </description>
+      <deliverables>
+        <item>Header with navigation (inside panel, not full-width)</item>
+        <item>Footer (inside panel)</item>
+        <item>HeroMain component (panel-aware)</item>
+        <item>FeatureGrid component</item>
+        <item>CTASection component</item>
+        <item>PricingTable component</item>
+      </deliverables>
+      <success-criteria>
+        Can assemble a complete homepage inside the shell.
+      </success-criteria>
+    </phase>
+    
+    <phase id="P3" name="Key Pages" duration="2-3 days" status="pending">
+      <description>
+        <![CDATA[
+        Build core marketing pages using the shell + panel components.
+        All pages use AppShell wrapper for consistent product feel.
+        ]]>
+      </description>
+      <deliverables>
+        <item>Homepage (shell-wrapped)</item>
+        <item>Pricing page (shell-wrapped)</item>
+        <item>About page (shell-wrapped)</item>
+        <item>Contact page with HubSpot form</item>
+      </deliverables>
+      <success-criteria>
+        Core marketing funnel complete. Pages feel like "the product's marketing face."
+      </success-criteria>
+    </phase>
+    
+    <phase id="P4" name="Blog Migration" duration="1-2 days" status="pending">
+      <deliverables>
+        <item>Blog listing page (shell-wrapped)</item>
+        <item>Blog post template</item>
+        <item>WordPress content export script</item>
+        <item>All blog posts migrated to MDX</item>
+      </deliverables>
+      <success-criteria>
+        All blog URLs working with redirects from old structure.
+      </success-criteria>
+    </phase>
+    
+    <phase id="P5" name="Integrations" duration="1-2 days" status="pending">
+      <deliverables>
+        <item>GTM/Analytics working</item>
+        <item>HubSpot tracking + chat</item>
+        <item>CookieYes consent banner</item>
+        <item>Cost Calculator React island</item>
+      </deliverables>
+      <success-criteria>
+        Marketing team confirms all tracking operational.
+      </success-criteria>
+    </phase>
+    
+    <phase id="P6" name="Launch + Lazy-Load Prep" duration="1-2 days" status="pending">
+      <description>
+        <![CDATA[
+        Final launch preparation and groundwork for future lazy-load transition.
+        ]]>
+      </description>
+      <deliverables>
+        <item>Final QA pass (shell pixel-perfection verified)</item>
+        <item>Redirects file for all old URLs</item>
+        <item>DNS cutover to new site</item>
+        <item>WordPress decommissioned (backup retained)</item>
+        <item>Service worker stub for future app preload</item>
+      </deliverables>
+      <success-criteria>
+        beings.com serving new Astro site with no broken links.
+        Shell verified against product for lazy-load compatibility.
+      </success-criteria>
+    </phase>
+  </implementation-phases>
+
+  <success-metrics>
+    <metric name="PageSpeed" target="95+" baseline="~75">
+      Google PageSpeed Insights score on mobile.
+    </metric>
+    <metric name="Time to Interactive" target="&lt;2s" baseline="~4s">
+      First meaningful interaction available.
+    </metric>
+    <metric name="Maintenance Hours" target="0/month" baseline="2-4/month">
+      Time spent on plugin updates, security patches.
+    </metric>
+    <metric name="Deploy Time" target="&lt;60s" baseline="N/A">
+      Time from Git push to live on Cloudflare.
+    </metric>
+    <metric name="SEO Rankings" target="Maintain/Improve" baseline="Current">
+      No ranking drops post-migration.
+    </metric>
+  </success-metrics>
+
+  <risks-and-mitigations>
+    <risk id="R1" severity="medium">
+      <description>SEO ranking drop during migration</description>
+      <mitigation>
+        Comprehensive redirects file. Keep URL structure where possible.
+        Submit new sitemap to Search Console immediately.
+      </mitigation>
+    </risk>
+    
+    <risk id="R2" severity="low">
+      <description>Cost Calculator logic errors in rebuild</description>
+      <mitigation>
+        Document exact formulas from existing plugin before rebuild.
+        Side-by-side testing with WordPress version.
+      </mitigation>
+    </risk>
+    
+    <risk id="R3" severity="low">
+      <description>HubSpot tracking gaps</description>
+      <mitigation>
+        Test all form submissions and tracking events in staging.
+        Marketing team sign-off before launch.
+      </mitigation>
+    </risk>
+    
+    <risk id="R4" severity="low">
+      <description>Blog content formatting issues post-migration</description>
+      <mitigation>
+        Manual review of top 20 posts. Automated checks for broken images.
+      </mitigation>
+    </risk>
+  </risks-and-mitigations>
+
+  <open-questions>
+    <question id="Q1" status="open">
+      <topic>New Repository vs Monorepo</topic>
+      <question>
+        Should beings-marketing be a separate repo or live in the beings monorepo?
+      </question>
+      <recommendation>
+        Separate repo recommended. Different deployment pipeline, different
+        concerns. Can share brand tokens via npm package or copy.
+      </recommendation>
+    </question>
+    
+    <question id="Q2" status="open">
+      <topic>CMS for Non-Technical Editors</topic>
+      <question>
+        Will anyone other than the 3-person technical team edit content?
+      </question>
+      <recommendation>
+        If yes, add Keystatic or TinaCMS later. For now, MDX in Git is
+        sufficient for a technical team.
+      </recommendation>
+    </question>
+    
+    <question id="Q3" status="open">
+      <topic>Product Page Strategy</topic>
+      <question>
+        How many product-specific pages (CloudLab, Aida) need to be built?
+      </question>
+      <recommendation>
+        Audit current WordPress pages. May be able to consolidate to
+        fewer, more impactful pages.
+      </recommendation>
+    </question>
+  </open-questions>
+
+  <appendix>
+    <wordpress-decommission-checklist>
+      <![CDATA[
+      After successful launch:
+      
+      1. [ ] Export full database backup
+      2. [ ] Export all media files (/wp-content/uploads/)
+      3. [ ] Document any remaining integrations
+      4. [ ] Cancel plugin licenses (Elementor Pro, Element Pack, etc.)
+      5. [ ] Set WordPress to maintenance mode
+      6. [ ] Keep hosting active for 30 days (rollback safety)
+      7. [ ] After 30 days: Cancel hosting, archive backups
+      ]]>
+    </wordpress-decommission-checklist>
+    
+    <cursor-prompts>
+      <![CDATA[
+      Useful prompts for building with Cursor:
+      
+      FOUNDATION:
+      "Create a new Astro project with Tailwind CSS, TypeScript, and 
+       @astrojs/react. Configure for Cloudflare Pages deployment.
+       Set up the brand tokens from bw-prd-01-rebrand.xml."
+      
+      COMPONENTS:
+      "Build a Hero component for the marketing site. Use the brand
+       colors from brand-tokens.css. Include: H1, subtitle, two CTA
+       buttons (primary and secondary), and a product screenshot area.
+       Dark mode support required."
+      
+      MIGRATION:
+      "Write a script that fetches all posts from the WordPress REST API
+       at beings.com, converts the HTML content to Markdown, and saves
+       each post as an MDX file with proper frontmatter."
+      ]]>
+    </cursor-prompts>
+  </appendix>
+</prd>

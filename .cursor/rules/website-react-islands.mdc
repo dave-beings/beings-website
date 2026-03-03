@@ -1,0 +1,140 @@
+---
+description: React island component patterns for Astro
+globs:
+  - "**/*.tsx"
+  - "**/*.jsx"
+alwaysApply: false
+---
+
+# React Islands in Astro
+
+## When to Use React
+
+Use React components (islands) only for:
+- **Forms** with validation and state (ContactForm, Newsletter)
+- **Calculators** with dynamic computation (CostCalculator)
+- **Interactive widgets** (Carousels, Accordions with animation)
+- **Third-party integrations** requiring JS (HubSpot embed)
+
+**Do NOT use React for:**
+- Static content display
+- Navigation (use Astro + View Transitions)
+- Simple show/hide (use CSS or vanilla JS)
+
+## Client Directives
+
+```astro
+<!-- Load when visible in viewport (recommended for below-fold) -->
+<ContactForm client:visible />
+
+<!-- Load immediately on page load -->
+<CriticalWidget client:load />
+
+<!-- Load when browser is idle -->
+<Analytics client:idle />
+
+<!-- Load only on specific media query -->
+<MobileMenu client:media="(max-width: 768px)" />
+
+<!-- Never hydrate - render only (for SEO content) -->
+<StaticPreview client:only="react" />
+```
+
+## Component Structure
+
+```tsx
+// src/components/islands/ContactForm.tsx
+import { useState } from 'react';
+
+interface ContactFormProps {
+  hubspotFormId?: string;
+  successMessage?: string;
+}
+
+export default function ContactForm({ 
+  hubspotFormId,
+  successMessage = 'Thanks! We\'ll be in touch.' 
+}: ContactFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Form logic...
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Form fields */}
+    </form>
+  );
+}
+```
+
+## Styling React Components
+
+Use Tailwind classes directly - they work the same as in Astro:
+
+```tsx
+export default function Button({ children, variant = 'primary' }) {
+  const baseStyles = 'px-6 py-3 font-semibold rounded-sm transition-colors duration-150';
+  const variants = {
+    primary: 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-light)]',
+    secondary: 'border-2 border-[var(--color-primary)] text-[var(--color-primary)]',
+  };
+
+  return (
+    <button className={`${baseStyles} ${variants[variant]}`}>
+      {children}
+    </button>
+  );
+}
+```
+
+## Passing Data from Astro
+
+```astro
+---
+// Fetch data at build time
+const pricingTiers = await fetchPricing();
+---
+
+<!-- Pass as props to React island -->
+<CostCalculator 
+  client:visible 
+  tiers={pricingTiers}
+  currency="USD"
+/>
+```
+
+## File Organization
+
+```
+src/components/islands/
+├── ContactForm.tsx      # HubSpot integration
+├── CostCalculator.tsx   # Pricing calculator
+├── ProductDemo.tsx      # Interactive product preview
+├── VideoPlayer.tsx      # Lazy-loaded video
+└── ThemeToggle.tsx      # Dark mode switch
+```
+
+## State Management
+
+For simple islands, use React hooks (`useState`, `useReducer`).
+
+For shared state across islands, consider:
+- URL search params (shareable state)
+- `nanostores` (lightweight, framework-agnostic)
+
+```tsx
+// src/stores/theme.ts
+import { atom } from 'nanostores';
+export const themeStore = atom<'light' | 'dark'>('light');
+
+// In React component
+import { useStore } from '@nanostores/react';
+import { themeStore } from '../stores/theme';
+
+const theme = useStore(themeStore);
+```

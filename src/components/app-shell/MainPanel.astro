@@ -1,0 +1,80 @@
+---
+/**
+ * MainPanel Component
+ * 
+ * The white content panel that creates the "floating" effect.
+ * 
+ * Key visual (from DevTools inspection of product):
+ * - border-radius: 12px (UNIFORM on ALL corners, not asymmetric)
+ * - border: 3px solid canvas-color (creates floating gap effect)
+ * - White background
+ * - No shadow (shadow is on dockview groups, not main panel)
+ * 
+ * @see DevTools comparison report
+ */
+
+interface Props {
+  /** Optional class for customization */
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<main class:list={["main-panel", className]}>
+  <div class="panel-content">
+    <slot />
+  </div>
+</main>
+
+<style>
+  .main-panel {
+    flex: 1;
+    min-width: 0; /* Prevent flex overflow */
+    background: var(--shell-surface);
+    
+    /* CORRECTED: Uniform radius on ALL corners (12px) */
+    border-radius: var(--shell-panel-radius);
+    
+    /* CORRECTED: Thick border in canvas color creates "floating" effect */
+    /* This is how the product does it - NOT margin */
+    border: var(--shell-panel-border);
+    
+    /* No shadow on main panel (product doesn't have it) */
+    box-shadow: none;
+    
+    /* Content overflow */
+    overflow: hidden;
+    
+    /* Full height */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel-content {
+    flex: 1;
+    overflow: auto;
+    
+    /* Scrollbar styling to match product */
+    scrollbar-width: thin;
+    scrollbar-color: var(--shell-divider) transparent;
+  }
+
+  .panel-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .panel-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .panel-content::-webkit-scrollbar-thumb {
+    background: var(--shell-divider);
+    border-radius: var(--shell-radius-full);
+  }
+
+  .panel-content::-webkit-scrollbar-thumb:hover {
+    background: var(--shell-text-secondary);
+  }
+</style>

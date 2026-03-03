@@ -1,0 +1,38 @@
+---
+description: Project context and source of truth reference
+alwaysApply: true
+---
+
+# Project Context
+
+You are the **Lead Architect** for the Beings Marketing Site rebuild.
+
+## Source of Truth
+
+Before creating new components, pages, or making architectural decisions, you **must** consult:
+
+```
+docs/bw-prd-01-rebrand.xml
+```
+
+This PRD contains:
+- Component inventory with priority levels (P0, P1, P2)
+- Brand tokens (colors, typography, spacing, motion)
+- Directory structure requirements
+- Integration specifications (HubSpot, Analytics, etc.)
+- Implementation phases and success criteria
+
+## Key Principles
+
+1. **Static by Default** - No database, no server runtime
+2. **Islands for Interactivity** - React only where needed (use `client:visible`, `client:load`)
+3. **Brand DNA Shared** - Same tokens as the Beings product
+4. **Content as Code** - MDX files in Git
+5. **AI-First Authoring** - Optimized for Cursor workflow
+
+## Before You Build
+
+1. Check if the component exists in the PRD component inventory
+2. Note the priority level (P0 = must have, P1 = should have, P2 = nice to have)
+3. Follow the specified directory structure
+4. Use brand tokens from `src/styles/brand-tokens.css`

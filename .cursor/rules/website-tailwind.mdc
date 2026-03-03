@@ -1,0 +1,123 @@
+---
+description: Tailwind CSS patterns and brand token usage
+globs:
+  - "**/*.astro"
+  - "**/*.tsx"
+  - "**/*.jsx"
+alwaysApply: false
+---
+
+# Tailwind CSS Guidelines
+
+## Brand Token Integration
+
+Use CSS custom properties with Tailwind's arbitrary value syntax:
+
+```html
+<!-- Colors -->
+<div class="bg-[var(--color-background)] text-[var(--color-text-primary)]">
+<button class="bg-[var(--color-primary)] hover:bg-[var(--color-primary-light)]">
+
+<!-- Or extend in tailwind.config.mjs -->
+```
+
+## Tailwind Config Extension
+
+```js
+// tailwind.config.mjs
+export default {
+  theme: {
+    extend: {
+      colors: {
+        primary: 'var(--color-primary)',
+        'primary-light': 'var(--color-primary-light)',
+        'primary-dark': 'var(--color-primary-dark)',
+        secondary: 'var(--color-secondary)',
+        background: 'var(--color-background)',
+        surface: 'var(--color-surface)',
+        divider: 'var(--color-divider)',
+      },
+      fontFamily: {
+        sans: ['Roboto Flex', 'Helvetica', 'Arial', 'sans-serif'],
+      },
+      borderRadius: {
+        'sm': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '28px',
+      },
+    },
+  },
+}
+```
+
+## Component Patterns
+
+### Buttons
+
+```html
+<!-- Primary -->
+<button class="px-6 py-3 bg-primary text-white font-semibold rounded-sm
+               hover:bg-primary-light transition-colors duration-150
+               focus:outline-none focus:ring-2 focus:ring-primary-light">
+  Get Started
+</button>
+
+<!-- Secondary -->
+<button class="px-6 py-3 border-2 border-primary text-primary font-semibold rounded-sm
+               hover:bg-primary hover:text-white transition-colors duration-150">
+  Learn More
+</button>
+```
+
+### Cards
+
+```html
+<div class="bg-surface rounded-md p-6 shadow-sm border border-divider">
+  <h3 class="text-xl font-semibold text-[var(--color-text-primary)]">Title</h3>
+  <p class="text-[var(--color-text-secondary)] mt-2">Description</p>
+</div>
+```
+
+### Section Spacing
+
+```html
+<section class="py-16 md:py-24 lg:py-32">
+  <div class="container mx-auto px-4 md:px-6 lg:px-8">
+    <!-- Content -->
+  </div>
+</section>
+```
+
+## Responsive Breakpoints
+
+| Breakpoint | Min Width | Usage |
+|------------|-----------|-------|
+| `sm:` | 640px | Mobile landscape |
+| `md:` | 768px | Tablets |
+| `lg:` | 1024px | Desktop |
+| `xl:` | 1280px | Large desktop |
+| `2xl:` | 1536px | Extra large |
+
+## Dark Mode
+
+```html
+<!-- Uses data attribute, not class -->
+<html data-theme="dark">
+
+<!-- Styles respond automatically via CSS variables -->
+<div class="bg-background text-[var(--color-text-primary)]">
+  <!-- Same classes work in both modes -->
+</div>
+```
+
+## Animation Classes
+
+```html
+<!-- Fade in on scroll (use with Intersection Observer) -->
+<div class="opacity-0 translate-y-4 transition-all duration-300 ease-out
+            data-[visible=true]:opacity-100 data-[visible=true]:translate-y-0">
+
+<!-- Hover lift -->
+<div class="hover:-translate-y-1 hover:shadow-lg transition-all duration-150">
+```

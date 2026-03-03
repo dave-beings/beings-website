@@ -1,0 +1,192 @@
+---
+/**
+ * SidebarRail Component
+ * 
+ * Marketing adaptation of product sidebar rail.
+ * Width: 80px (5rem) from RAIL_WIDTH
+ * 
+ * PHASE 1 STATE: Only hamburger icon visible.
+ * Hidden elements (preserved for Phase 2):
+ * - Workspace navigation icons (personal, org)
+ * - Beings logo FAB at bottom
+ * 
+ * @see /Users/davejohnstone/_dev/beings/src/layouts/Sidebar.tsx
+ */
+
+interface Props {
+  /** Optional class for customization */
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<aside class:list={["sidebar-rail", className]}>
+  <!-- Navigation content area (matches NavigationRailHeader) -->
+  <div class="rail-content">
+    <!-- Header row: Hamburger button (first element, no logo) -->
+    <div class="rail-header">
+      <button class="rail-button" aria-label="Toggle sidebar">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- HIDDEN FOR PHASE 1 - Workspace/Navigation icons
+    <nav class="rail-nav" aria-label="Main navigation">
+      <button class="rail-button" aria-label="Personal" data-active="true">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </button>
+      <button class="rail-button" aria-label="Org Workspaces" disabled>
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+      </button>
+    </nav>
+    -->
+  </div>
+
+  <!-- HIDDEN FOR PHASE 1 - Footer with Beings logo FAB
+  <div class="rail-footer">
+    <a href="/" class="rail-button logo-button" aria-label="Beings Home" data-active="true">
+      <svg viewBox="700 650 2600 2750" fill="currentColor">
+        <path d="M681.658813,1880.360474 C665.070007,1843.093018 655.241577,1804.894531 653.244141,1764.875122 C648.134460,1662.502808 682.114136,1574.761353 752.970154,1501.122437 C791.593872,1460.981567 837.574829,1432.354126 890.858765,1416.059448 C937.939331,1401.662109 986.046814,1397.455444 1035.035645,1403.618530 C1104.030640,1412.298584 1165.036377,1439.033081 1217.709229,1484.361938 C1262.539429,1522.941772 1294.211670,1570.790771 1316.407471,1625.406006 C1332.933716,1666.070679 1350.205933,1706.439575 1367.656494,1746.718994 C1382.761597,1781.584717 1401.148560,1814.831909 1420.862427,1847.241577 C1436.417847,1872.814941 1452.695190,1898.059082 1470.304932,1922.245972 C1494.023926,1954.823975 1522.665039,1982.468140 1558.314209,2002.315674 C1588.521484,2019.133301 1621.048706,2028.272095 1655.121582,2031.517456 C1675.284912,2033.437866 1695.725464,2034.040894 1715.958618,2033.214722 C1738.862793,2032.279541 1761.729248,2029.532471 1784.514771,2026.770508 C1827.526123,2021.557129 1870.098633,2013.594238 1912.347656,2004.094849 C1942.867310,1997.232910 1973.248169,1989.692139 2003.514771,1981.779907 C2043.433838,1971.344482 2083.222168,1960.399658 2122.989014,1949.393677 C2160.950439,1938.887451 2199.541016,1931.533691 2238.603760,1927.039917 C2262.053223,1924.342285 2285.703125,1922.781982 2309.302246,1922.131714 C2345.266113,1921.140869 2381.326416,1921.134766 2417.030273,1926.277222 C2444.691162,1930.261353 2472.374023,1934.659912 2499.632080,1940.737061 C2540.294678,1949.802856 2579.651855,1963.255737 2617.938721,1979.849121 C2686.654297,2009.630371 2748.880371,2049.470947 2804.830078,2099.198242 C2862.861084,2150.775635 2910.932373,2210.450928 2949.172119,2277.945312 C2977.990967,2328.810791 3000.223389,2382.461182 3015.642822,2438.946289 C3027.251465,2481.470947 3035.326660,2524.614014 3038.269043,2568.549316 C3040.069336,2595.430420 3040.837402,2622.468750 3040.285889,2649.399902 C3039.322510,2696.443359 3033.193359,2742.929932 3022.574707,2788.860107 C2995.897949,2904.247559 2943.806396,3006.852539 2867.798340,3097.380371 C2811.516602,3164.414062 2744.909180,3219.154053 2668.266602,3261.436523 C2613.162842,3291.836182 2554.732178,3313.733398 2493.143799,3326.833496 C2464.461182,3332.934326 2435.488770,3337.488525 2406.110840,3338.564697 C2381.833740,3339.454346 2357.500977,3341.200684 2333.269775,3340.359619 C2302.370850,3339.287109 2271.379395,3337.291748 2240.742920,3333.283936 C2211.091309,3329.405273 2181.575439,3323.575439 2152.474365,3316.617920 C2109.378174,3306.314209 2067.695801,3291.406250 2027.346191,3272.976074 C1963.303223,3243.724121 1904.635010,3206.089355 1852.086548,3159.199951 C1784.941772,3099.286377 1731.500854,3028.861328 1691.928345,2947.993164 C1669.481812,2902.122070 1652.271729,2854.385254 1639.827515,2804.813477 C1630.397095,2767.247070 1624.976929,2729.093506 1619.706543,2690.818359 C1615.485107,2660.161133 1610.023804,2629.655518 1604.392822,2599.215820 C1596.091675,2554.341309 1585.120972,2510.068848 1572.096191,2466.335449 C1552.040283,2398.993896 1529.661987,2332.488525 1497.627563,2269.696045 C1476.627808,2228.533447 1451.371338,2190.360107 1417.770996,2158.113770 C1386.974243,2128.558350 1351.323975,2107.135254 1311.033447,2093.414551 C1270.667603,2079.668213 1228.942017,2074.029053 1186.441162,2072.493408 C1144.046509,2070.961426 1101.975342,2074.552246 1059.837524,2078.239990 C1016.327454,2082.047852 972.712585,2083.834961 929.419006,2075.938965 C880.896301,2067.089355 836.368225,2048.373535 796.133972,2019.765625 C745.598999,1983.833374 707.650330,1937.473145 681.658813,1880.360474z"/>
+        <path d="M2758.024658,1289.957886 C2749.461182,1324.494263 2737.490723,1356.858887 2721.450928,1387.709473 C2703.675537,1421.898926 2681.605469,1453.027710 2655.390869,1481.267212 C2621.967041,1517.272827 2583.312744,1546.375122 2539.680176,1568.812134 C2501.219482,1588.589722 2460.579590,1601.861938 2417.910889,1609.192871 C2386.885010,1614.523315 2355.645508,1616.188843 2324.334961,1614.826538 C2289.648438,1613.317383 2255.451172,1607.739136 2222.093018,1597.876587 C2165.845459,1581.246704 2114.712891,1554.744873 2069.569824,1517.178223 C1999.881836,1459.185913 1952.936523,1386.510254 1929.800781,1298.702393 C1915.714722,1245.241089 1912.473877,1191.059448 1919.470703,1136.233398 C1930.722290,1048.068359 1966.162476,970.880127 2025.201782,904.614014 C2077.577881,845.826660 2141.588623,804.594788 2216.616455,780.911865 C2253.582764,769.243164 2291.557129,763.167664 2330.506348,762.121033 C2369.743408,761.066772 2408.376709,764.539368 2446.343750,773.926697 C2502.591064,787.833862 2554.001221,812.275635 2600.301270,847.290649 C2655.264404,888.857178 2697.800781,940.707520 2727.656982,1002.701721 C2754.761963,1058.983765 2768.632080,1118.513794 2769.569580,1181.119141 C2770.116455,1217.646729 2766.047852,1253.565308 2758.024658,1289.957886z"/>
+      </svg>
+    </a>
+  </div>
+  -->
+</aside>
+
+<style>
+  .sidebar-rail {
+    width: var(--shell-rail-width);
+    min-width: var(--shell-rail-width);
+    height: 100dvh;           /* Fixed viewport height (matches product) */
+    position: sticky;         /* Stays in place when content scrolls */
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--shell-canvas);
+    border-right: var(--shell-rail-border);
+    overflow: hidden;
+  }
+
+  /* Main content area - matches NavigationRailHeader Box */
+  .rail-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    /* KEY: Product padding - py: 0.75rem, pl: 1rem */
+    padding: var(--shell-rail-padding-y) 0 var(--shell-rail-padding-y) var(--shell-rail-padding-x);
+    /* KEY: Left-aligned, not centered */
+    align-items: flex-start;
+  }
+
+  /* Header row with hamburger */
+  .rail-header {
+    flex-shrink: 0;
+    margin-bottom: 0.5rem; /* mb: 1 in MUI = 8px */
+  }
+
+  /* Hamburger uses text-primary (darker than other icons) */
+  .rail-header .rail-button {
+    color: var(--shell-text-primary);
+  }
+
+  /* Navigation area - scrollable */
+  .rail-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Footer area - fixed at bottom with logo FAB */
+  .rail-footer {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem 0.5rem; /* Extra bottom padding for FAB */
+    border-top: 1px solid var(--shell-divider);
+  }
+
+  /* Logo button - inherits rail-button styles, uses currentColor */
+  .logo-button {
+    text-decoration: none;
+  }
+
+  /* Rail button - 48x48 touch target */
+  .rail-button {
+    width: var(--shell-icon-button-size);
+    height: var(--shell-icon-button-size);
+    min-width: var(--shell-icon-button-size);
+    min-height: var(--shell-icon-button-size);
+    padding: var(--shell-icon-button-padding);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    border-radius: var(--shell-radius-sm);
+    color: var(--shell-text-secondary);
+    cursor: pointer;
+    transition: 
+      background-color var(--shell-duration-fast) var(--shell-ease-standard),
+      color var(--shell-duration-fast) var(--shell-ease-standard);
+  }
+
+  .rail-button svg {
+    width: var(--shell-icon-size);
+    height: var(--shell-icon-size);
+  }
+
+  /* Disabled state (matches product's opacity and action.disabled color) */
+  .rail-button:disabled {
+    opacity: 0.6;
+    cursor: default;
+    color: rgba(0, 0, 0, 0.26);  /* MUI action.disabled */
+  }
+
+  /* Hover states - match product behavior */
+  
+  /* Hamburger: 4% black overlay (MUI IconButton default) */
+  .rail-header .rail-button:hover:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  
+  /* Inactive workspace icons: 15% primary on hover */
+  .rail-nav .rail-button:not([data-active="true"]):hover:not(:disabled) {
+    background-color: rgba(91, 111, 204, 0.15);
+  }
+  
+  /* Active icons (workspace + logo): 10% → 15% primary on hover */
+  .rail-button[data-active="true"]:hover:not(:disabled) {
+    background-color: rgba(91, 111, 204, 0.15);
+  }
+
+  /* Active state - blue tint background AND blue icon */
+  .rail-button[data-active="true"] {
+    background-color: rgba(91, 111, 204, 0.10);
+    color: var(--shell-primary);  /* Blue icon when active */
+  }
+
+  /* Focus state */
+  .rail-button:focus-visible {
+    outline: 2px solid var(--shell-primary);
+    outline-offset: 2px;
+  }
+
+  /* Pressed state */
+  .rail-button:active:not(:disabled) {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+</style>

@@ -1,0 +1,90 @@
+/**
+ * App Shell Layout Tokens
+ * 
+ * ARCHITECTURE (DRY/SSOT):
+ * ┌─────────────────────────────────────────────────────────────────┐
+ * │  brand-tokens.css  ← SSOT for colors, radii, shadows, motion   │
+ * │         ↓                                                       │
+ * │  app-shell.css     ← Shell-specific layout + references        │
+ * │         ↓                                                       │
+ * │  Components        ← Use --shell-* tokens                      │
+ * └─────────────────────────────────────────────────────────────────┘
+ * 
+ * PRODUCT SOURCE OF TRUTH:
+ * - beings/src/theme/layout-constants.ts → Rail/drawer widths
+ * - beings/src/theme/m3Tokens.ts → Radii, shadows, motion
+ * - beings/src/theme/palette.ts → Colors
+ * 
+ * PIXEL VALUES: These must match product exactly for seamless
+ * lazy-load transition. Do not round or simplify.
+ * 
+ * Last synced with product: 2026-01-23
+ */
+
+:root {
+  /* ===== COLORS (inherited from brand-tokens.css) ===== */
+  --shell-canvas: var(--color-background);
+  --shell-surface: var(--color-surface);
+  --shell-divider: var(--color-divider);
+  --shell-text-primary: var(--color-text-primary);
+  --shell-text-secondary: var(--color-text-secondary);
+  --shell-primary: var(--color-primary);
+  --shell-primary-light: var(--color-primary-light);
+
+  /* ===== ELEVATION (inherited from brand-tokens.css) ===== */
+  --shell-elevation-0: var(--elevation-0);
+  --shell-elevation-1: var(--elevation-1);
+  --shell-elevation-2: var(--elevation-2);
+  --shell-elevation-3: var(--elevation-3);
+
+  /* ===== STATE LAYERS (inherited from brand-tokens.css) ===== */
+  --shell-state-hover: var(--state-hover);
+  --shell-state-focus: var(--state-focus);
+  --shell-state-pressed: var(--state-pressed);
+
+  /* ===== CORNER RADII (inherited from brand-tokens.css) ===== */
+  --shell-radius-xs: var(--radius-xs);
+  --shell-radius-sm: var(--radius-sm);
+  --shell-radius-md: var(--radius-md);
+  --shell-radius-lg: var(--radius-lg);
+  --shell-radius-xl: var(--radius-xl);
+  --shell-radius-full: var(--radius-full);
+
+  /* ===== MOTION (inherited from brand-tokens.css) ===== */
+  --shell-duration-fast: var(--duration-fast);
+  --shell-duration-medium: var(--duration-medium);
+  --shell-ease-standard: var(--ease-standard);
+  --shell-ease-emphasized: var(--ease-emphasized);
+
+  /* ===== SHELL-SPECIFIC LAYOUT (pixel-perfect from product) ===== */
+  
+  /* Sidebar rail width - collapsed state */
+  --shell-rail-width: 5rem;               /* 80px - RAIL_WIDTH */
+  
+  /* Panel corner radius */
+  --shell-panel-radius: 0.75rem;          /* 12px - dockview group radius */
+  
+  /* Panel border - creates the "floating" effect */
+  --shell-panel-border-width: 3.75px;     /* Exact from DevTools */
+  --shell-panel-border: var(--shell-panel-border-width) solid var(--shell-canvas);
+  
+  /* Rail border - subtle right separator */
+  --shell-rail-border: 0.625px solid var(--shell-divider);
+
+  /* ===== ICON/TOUCH TARGETS ===== */
+  --shell-icon-button-size: 48px;         /* MUI IconButton default */
+  --shell-icon-size: 24px;                /* Icon within button */
+  --shell-icon-button-padding: 12px;      /* (48 - 24) / 2 */
+
+  /* ===== INTERIOR SPACING ===== */
+  
+  /* Rail padding (from NavigationRailHeader.tsx) */
+  --shell-rail-padding-y: 0.75rem;        /* 12px - py */
+  --shell-rail-padding-x: 1rem;           /* 16px - pl (pr is 0) */
+  
+  /* Content area padding (from FlatMainLayout.tsx) */
+  --shell-content-padding: 0.5rem;        /* 8px - theme.spacing(1) */
+}
+
+/* Dark mode: All colors inherit automatically from brand-tokens.css */
+/* No overrides needed here - the var() references pick up dark values */

@@ -10,4 +10,5 @@ data/
 *.err
 dist/
 build/
+.astro/
 .DS_Store

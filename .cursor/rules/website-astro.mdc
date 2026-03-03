@@ -1,0 +1,45 @@
+---
+description: Astro component conventions and patterns
+globs:
+  - "**/*.astro"
+alwaysApply: false
+---
+
+# Astro Component Guidelines
+
+## Component Structure
+
+Astro components have a frontmatter section (between ---) for imports, props, and logic,
+followed by the template section with HTML and Astro expressions.
+
+### Standard Pattern
+
+1. Imports at the top
+2. Props interface (TypeScript)
+3. Destructure props with defaults
+4. Data fetching / logic
+5. Template with slots
+
+## File Organization
+
+- src/components/layout/ - Layout components (Header, Footer, Layout)
+- src/components/marketing/ - Marketing sections (Hero, FeatureGrid, CTASection)
+- src/components/islands/ - React interactive components
+
+## Slots
+
+Use <slot /> for default content, <slot name="xyz" /> for named slots.
+Children use slot="xyz" attribute or <Fragment slot="xyz"> wrapper.
+
+## Static vs Dynamic
+
+- Static (default): No client JS shipped
+- Dynamic: Use React islands with client:visible, client:load, client:idle
+
+## Content Collections
+
+Use getCollection from astro:content for typed content queries.
+
+## SEO
+
+Define title, description, canonical URL in frontmatter and render in head.

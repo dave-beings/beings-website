@@ -1,0 +1,143 @@
+---
+description: Project architecture and directory structure guidelines
+alwaysApply: false
+---
+
+# Architecture Guidelines
+
+## Directory Structure
+
+```
+beings-website/
+├── .cursor/
+│   └── rules/              # Cursor AI rules
+├── docs/
+│   └── bw-prd-01-rebrand.xml  # PRD (Source of Truth)
+├── public/
+│   ├── favicon.ico
+│   ├── og-image.png
+│   └── robots.txt
+├── src/
+│   ├── assets/
+│   │   └── logo.svg        # Brand assets
+│   ├── styles/
+│   │   └── brand-tokens.css # Design tokens
+│   ├── components/
+│   │   ├── layout/         # Structural components
+│   │   │   ├── Header.astro
+│   │   │   ├── Footer.astro
+│   │   │   └── Layout.astro
+│   │   ├── marketing/      # Marketing sections
+│   │   │   ├── Hero.astro
+│   │   │   ├── FeatureGrid.astro
+│   │   │   ├── Testimonial.astro
+│   │   │   ├── PricingTable.astro
+│   │   │   ├── CTASection.astro
+│   │   │   └── ProductScreenshot.astro
+│   │   └── islands/        # React interactive components
+│   │       ├── CostCalculator.tsx
+│   │       ├── ContactForm.tsx
+│   │       └── ProductDemo.tsx
+│   ├── pages/
+│   │   ├── index.astro     # Homepage
+│   │   ├── about.astro
+│   │   ├── pricing.astro
+│   │   ├── contact.astro
+│   │   └── blog/
+│   │       ├── index.astro
+│   │       └── [...slug].astro
+│   └── content/
+│       ├── config.ts       # Content collections schema
+│       └── blog/
+│           └── *.mdx       # Blog posts
+├── scripts/
+│   └── migrate-wp-posts.ts # WordPress migration
+├── astro.config.mjs
+├── tailwind.config.mjs
+├── tsconfig.json
+├── wrangler.toml           # Cloudflare Pages
+└── package.json
+```
+
+## Component Priority (from PRD)
+
+### P0 - Must Have (Build First)
+- Layout, Header, Footer
+- HeroMain
+- FeatureGrid
+- PricingTable
+- CTASection
+- ContactForm (React island)
+
+### P1 - Should Have
+- HeroSimple
+- FeatureShowcase
+- Testimonial
+- LogoCloud
+- BlogCard, BlogPost
+- CostCalculator (React island)
+
+### P2 - Nice to Have
+- TestimonialCarousel
+- StatsBar
+- ProductDemo
+- VideoPlayer
+- AuthorCard
+
+## Content Collections
+
+```typescript
+// src/content/config.ts
+import { defineCollection, z } from 'astro:content';
+
+const blog = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.date(),
+    updatedDate: z.date().optional(),
+    author: z.string().default('beings-team'),
+    category: z.string(),
+    tags: z.array(z.string()),
+    image: z.string().optional(),
+  }),
+});
+
+export const collections = { blog };
+```
+
+## Page Templates
+
+Each page should:
+1. Import Layout component
+2. Define SEO metadata in frontmatter
+3. Compose from marketing components
+4. Use semantic HTML structure
+
+```astro
+---
+import Layout from '../components/layout/Layout.astro';
+import Hero from '../components/marketing/Hero.astro';
+import FeatureGrid from '../components/marketing/FeatureGrid.astro';
+import CTASection from '../components/marketing/CTASection.astro';
+
+const seo = {
+  title: 'Beings - Qualitative Research Platform',
+  description: 'AI-powered qualitative coding for researchers',
+};
+---
+
+<Layout {...seo}>
+  <Hero />
+  <FeatureGrid />
+  <CTASection />
+</Layout>
+```
+
+## Deployment
+
+- **Platform:** Cloudflare Pages
+- **Build:** `npm run build` → `dist/`
+- **Preview:** Automatic on PR
+- **Production:** Auto-deploy on main branch

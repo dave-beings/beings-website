@@ -1,0 +1,18 @@
+# Cloudflare Pages Configuration
+# https://developers.cloudflare.com/pages/configuration/wrangler-configuration/
+
+name = "beings-marketing"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "dist"
+
+# Environment variables (non-sensitive)
+[vars]
+SITE_URL = "https://beings.com"
+
+# Production environment
+[env.production]
+name = "beings-marketing"
+
+# Preview environment (PR deploys)
+[env.preview]
+name = "beings-marketing-preview"

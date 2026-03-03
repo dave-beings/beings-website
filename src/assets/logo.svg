@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 32" fill="none">
+  <!-- Beings Logo Placeholder -->
+  <!-- Replace with actual logo from beings/src/assets/logo.svg -->
+  
+  <!-- Icon mark - abstract "B" shape -->
+  <circle cx="16" cy="16" r="14" fill="currentColor" opacity="0.1"/>
+  <path d="M10 8h8a6 6 0 0 1 0 12h-8V8zm0 12h8a6 6 0 0 1 0 12h-8V20z" 
+        fill="currentColor" opacity="0.9"/>
+  
+  <!-- Wordmark -->
+  <text x="40" y="22" 
+        font-family="'Roboto Flex', Helvetica, Arial, sans-serif" 
+        font-size="18" 
+        font-weight="600" 
+        fill="currentColor">
+    beings
+  </text>
+</svg>

@@ -1,0 +1,78 @@
+---
+/**
+ * AppShell Component
+ * 
+ * Root layout wrapper that replicates the exact product structure:
+ * - Gray canvas background (full viewport)
+ * - Fixed sidebar rail (80px - from DevTools inspection)
+ * - Main panel with 12px uniform radius and border gap
+ * 
+ * This is the "frame" that makes the marketing site look like the product.
+ * 
+ * @see DevTools comparison report for actual product values
+ */
+
+import SidebarRail from './SidebarRail.astro';
+import MainPanel from './MainPanel.astro';
+import '../../styles/app-shell.css';
+
+interface Props {
+  /** Optional class for customization */
+  class?: string;
+  /** Hide the sidebar rail (for certain pages) */
+  hideRail?: boolean;
+}
+
+const { class: className, hideRail = false } = Astro.props;
+---
+
+<div class:list={["app-shell", { "no-rail": hideRail }, className]}>
+  {!hideRail && <SidebarRail />}
+  
+  <div class="shell-main">
+    <MainPanel>
+      <slot />
+    </MainPanel>
+  </div>
+</div>
+
+<style>
+  .app-shell {
+    display: grid;
+    grid-template-columns: var(--shell-rail-width) 1fr;
+    height: 100dvh;        /* Fixed to viewport height */
+    max-height: 100dvh;    /* Prevent overflow */
+    width: 100%;
+    overflow: hidden;      /* Clip any overflow - content scrolls inside MainPanel */
+    background: var(--shell-canvas);
+  }
+
+  /* When rail is hidden */
+  .app-shell.no-rail {
+    grid-template-columns: 1fr;
+  }
+
+  .shell-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;               /* Fill remaining grid height */
+    min-height: 0;         /* Allow flex child to shrink */
+    overflow: hidden;      /* Prevent overflow - panel-content scrolls */
+    
+    /* KEY: Content area has padding (p: 1 = 8px in product) */
+    /* This creates visible gray gap around the white panel */
+    padding: var(--shell-content-padding);
+    background: var(--shell-canvas);
+  }
+
+  /* Mobile: Stack vertically, hide rail */
+  @media (max-width: 768px) {
+    .app-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .app-shell :global(.sidebar-rail) {
+      display: none;
+    }
+  }
+</style>
