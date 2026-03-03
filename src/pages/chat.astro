@@ -11,7 +11,7 @@ const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Talk to Aida — Beings</title>
-    <meta name="description" content="Your sovereign active memory. Lives in WhatsApp." />
+    <meta name="description" content="Aida lives in WhatsApp. She listens, remembers, and connects the dots." />
     <meta property="og:title" content="Talk to Aida" />
     <meta property="og:description" content="Your memory. Getting smarter while you sleep." />
     <meta property="og:type" content="website" />
@@ -30,11 +30,12 @@ const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${
 
       <div class="hero">
         <h1>Your memory.<br />Getting smarter<br />while you sleep.</h1>
-        <p>Aida is your personal AI memory. She lives in WhatsApp. She remembers everything you tell her.</p>
-        <p class="edge">Tell her something worth remembering.</p>
+        <p>Aida lives in WhatsApp. She listens, remembers, and connects the dots — so your best thinking isn't lost.</p>
+        <p class="edge">What would you tell her first?</p>
       </div>
 
       <a class="cta" href={WA_LINK}>Start talking to Aida</a>
+      <p class="safety">Private by default. Just you and Aida.</p>
 
       <div class="qr-section">
         <canvas id="qr" width="160" height="160"></canvas>
@@ -175,6 +176,15 @@ const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${
   }
 
   .cta:active { transform: scale(0.98); }
+
+  .safety {
+    font-size: 0.6875rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    opacity: 0.7;
+    margin-top: calc(-1 * var(--space-6));
+    font-family: 'Roboto Mono', monospace;
+  }
 
   .qr-section {
     display: none;
