@@ -7,7 +7,7 @@ pages_build_output_dir = "dist"
 
 # Environment variables (non-sensitive)
 [vars]
-SITE_URL = "https://beings.com"
+SITE_URL = "https://website.beings.com"
 
 # Production environment
 [env.production]
