@@ -18,38 +18,13 @@ The original page is at `/Users/glassbox/_dev/beings/src/chat-page.ts`. Key elem
 - **Visual:** Canvas+Card layout (gray bg `#F0F4F9`, white card `12px` radius, M3 elevation-2 shadow)
 - **Brand:** "Beings" in header, `beings.com` link in footer
 
-## Phase 1 — Build the page in beings-website
+## Phase 1 — Build the page in beings-website ✅
 
-Replace `src/pages/index.astro` (currently a Phase 2 placeholder) with the landing page content.
+**Done** (2026-03-03). Built as `src/pages/chat.astro` — a standalone page (not replacing `index.astro`) using brand tokens from `brand-tokens.css`. Pure HTML/CSS, SSG, QR code on desktop, pulsing status dot.
 
-**Requirements:**
-1. Use the existing `Layout.astro` component (has SEO meta, header, footer, dark mode) OR create a minimal standalone page — the original is a single centered card, no nav header needed
-2. Use CSS custom properties from `src/styles/brand-tokens.css` — do NOT hardcode hex colours. Map from the original:
-   - `--bg` → `--color-background` (`#F0F4F9`)
-   - `--surface` → `--color-surface` (`#FFFFFF`)
-   - `--text` → `--color-text-primary` (`#1A1D2E`)
-   - `--muted` → `--color-text-secondary` (`#4A5568`)
-   - `--primary` → `--color-primary` (`#5B6FCC`)
-   - `--primary-hover` → `--color-primary-dark` (`#3E4B99`)
-   - `--secondary` → `--color-secondary` (`#7E57C2`)
-   - `--divider` → `--color-divider` (`#E2E8F0`)
-   - `--radius-card` → `--radius-md` (`12px`)
-   - `--radius-btn` → `--radius-sm` (`8px`)
-   - `--shadow` → `--elevation-2`
-3. Keep the QR code (desktop only, `display: none` on mobile, `display: flex` on `≥768px`)
-4. Keep the pulsing status dot animation
-5. Import `global.css` for base typography
-6. No React islands needed — this is pure HTML/CSS
-7. Astro page should be SSG (no client-side JS except the QR code script)
+## Phase 2 — Deploy and verify ✅
 
-## Phase 2 — Deploy and verify
-
-```bash
-npm run build
-npx wrangler pages deploy dist --project-name beings-marketing
-```
-
-Verify at `https://website.beings.com` — should show the landing page.
+**Done** (2026-03-03). Deployed to Cloudflare Pages. Live at `https://website.beings.com/chat`.
 
 ## Phase 3 — Redirect the Worker route
 
@@ -67,7 +42,7 @@ if (url.pathname === '/chat' && request.method === 'GET') {
 With:
 ```typescript
 if (url.pathname === '/chat' && request.method === 'GET') {
-  return Response.redirect('https://website.beings.com', 301);
+  return Response.redirect('https://website.beings.com/chat', 301);
 }
 ```
 
