@@ -1,1 +1,1 @@
-/Users/glassbox/_dev/beings-context/tooling/core/AGENTS-edge.md
+/Users/glassbox/_dev/beings-context/tooling/core/AGENTS-website.md
