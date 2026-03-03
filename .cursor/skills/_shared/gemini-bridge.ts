@@ -1,0 +1,1 @@
+/Users/glassbox/_dev/beings-context/tooling/core/skills/_shared/gemini-bridge.ts

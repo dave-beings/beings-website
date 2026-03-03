@@ -1,0 +1,1 @@
+/Users/glassbox/_dev/beings-context/skills/_shared/scratchpad.js

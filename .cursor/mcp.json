@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "beings-mcp": {
+      "command": "node",
+      "args": ["/Users/glassbox/_dev/beings-context/mcp/skeleton-server.js"]
+    }
+  }
+}
