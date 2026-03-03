@@ -1,0 +1,180 @@
+---
+/**
+ * HowItWorks — 6-step card grid (WS card pattern)
+ * 
+ * Each card: label → title → product icons in squircles (top-down).
+ * Icons match the product's squircle style (rounded-square bg + Material Symbol).
+ * Icon row pinned to bottom via flex + margin-top: auto.
+ */
+
+const steps = [
+  {
+    label: 'Step 1',
+    title: 'Invite Aida to research calls, or upload your audio, text or PDF file',
+    icons: [
+      { name: 'upload', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+      { name: 'auto_awesome', bg: '#e0e7ff', color: '#5B6FCC' },
+    ],
+  },
+  {
+    label: 'Step 2',
+    title: 'Store your research knowledge in one place, invite your team',
+    icons: [
+      { name: 'folder', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+      { name: 'group', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+    ],
+  },
+  {
+    label: 'Step 3',
+    title: 'Use conversational prompts to analyse interviews and spot trends',
+    icons: [
+      { name: 'auto_awesome', bg: '#e0e7ff', color: '#5B6FCC' },
+      { name: 'description', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+    ],
+  },
+  {
+    label: 'Step 4',
+    title: 'Use advanced AI to add reasoning, synthesis across multiple files, and draft complex outputs',
+    icons: [
+      { name: 'auto_awesome', bg: '#e0e7ff', color: '#5B6FCC' },
+      { name: 'description', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+      { name: 'edit_note', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+    ],
+  },
+  {
+    label: 'Step 5',
+    title: 'Utilise your project files to create your knowledge base',
+    icons: [
+      { name: 'folder', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+      { name: 'auto_awesome', bg: '#e0e7ff', color: '#5B6FCC' },
+    ],
+  },
+  {
+    label: 'Step 6',
+    title: 'Build evidence-backed client reports, directly share project files with clients',
+    icons: [
+      { name: 'description', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+      { name: 'share', bg: 'rgba(0,0,0,0.04)', color: '#1A1D2E' },
+    ],
+  },
+];
+---
+
+<div class="how-it-works">
+  <h2 class="hiw-heading">How it works</h2>
+  <p class="hiw-subhead">
+    Transcribing interviews from audio or video is as simple as inviting Aida to your calls or dropping in a file.
+  </p>
+  <div class="hiw-grid">
+    {steps.map((step) => (
+      <div class="hiw-card">
+        <span class="hiw-label">{step.label}</span>
+        <p class="hiw-card-title">{step.title}</p>
+        <div class="hiw-icon-row">
+          {step.icons.map((icon) => (
+            <div class="hiw-squircle" style={`background:${icon.bg};color:${icon.color};`}>
+              <span class="material-symbols-rounded hiw-icon">{icon.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .how-it-works {
+    max-width: 800px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .hiw-heading {
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--color-text-primary, #1A1D2E);
+    margin: 0 0 0.75rem;
+    line-height: 2.5rem;
+  }
+
+  .hiw-subhead {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #5f6368);
+    line-height: 1.375rem;
+    margin: 0 0 2rem;
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+
+  .hiw-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 1rem;
+  }
+
+  .hiw-card {
+    background: #f8fafd;
+    border: 1px solid #f8fafd;
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+
+  .hiw-card:hover {
+    border-color: #e0e4ea;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  .hiw-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #5629A4;
+    line-height: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .hiw-card-title {
+    font-size: 0.9375rem;
+    font-weight: 400;
+    color: var(--color-text-secondary, #5f6368);
+    line-height: 1.375rem;
+    margin: 0;
+  }
+
+  .hiw-icon-row {
+    margin-top: auto;
+    padding-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .hiw-squircle {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .hiw-icon {
+    font-size: 1.125rem;
+    color: inherit;
+    font-variation-settings: 'FILL' 1;
+  }
+
+  @media (max-width: 599px) {
+    .hiw-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hiw-card {
+      padding: 1.25rem;
+    }
+  }
+</style>

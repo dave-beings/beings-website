@@ -17,8 +17,8 @@
   /* Secondary - Academic Purple */
   --color-secondary: #7E57C2;
   
-  /* Surfaces */
-  --color-background: #F0F4F9;
+  /* Surfaces — white canvas for marketing (eliminates card-in-card nesting) */
+  --color-background: #FFFFFF;
   --color-surface: #FFFFFF;
   --color-surface-elevated: #FFFFFF;
   
@@ -120,6 +120,15 @@
   --duration-medium: 300ms;
   --duration-slow: 500ms;
   
+  /* ===== M3 WINDOW SIZE CLASSES (BW-02 Task 1.3) ===== */
+  /* Source: m3.material.io/foundations/layout/understanding-layout/overview */
+  /* These are reference values — actual breakpoints use @media queries below */
+  --bp-compact: 0px;        /* Phone portrait (0–599px) */
+  --bp-medium: 600px;       /* Tablet portrait, foldable (600–839px) */
+  --bp-expanded: 840px;     /* Tablet landscape, small desktop (840–1199px) */
+  --bp-large: 1200px;       /* Desktop (1200–1599px) */
+  --bp-xlarge: 1600px;      /* Wide desktop (1600px+) */
+
   /* ===== Z-INDEX ===== */
   --z-dropdown: 100;
   --z-sticky: 200;

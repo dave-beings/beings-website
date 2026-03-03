@@ -1,0 +1,168 @@
+---
+/**
+ * Button Component
+ * 
+ * Polymorphic button that renders as <a> if href is provided, <button> otherwise.
+ * Uses SSOT design tokens for consistent styling.
+ * 
+ * @example
+ * <Button href="/signup">Get Started</Button>
+ * <Button variant="secondary" onClick={handleClick}>Cancel</Button>
+ */
+
+export interface Props {
+  /** Visual variant */
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
+  /** Size preset */
+  size?: 'sm' | 'md' | 'lg';
+  /** If provided, renders as <a> tag */
+  href?: string;
+  /** Additional CSS classes */
+  class?: string;
+  /** Button type (only for <button>) */
+  type?: 'button' | 'submit' | 'reset';
+  /** Disabled state */
+  disabled?: boolean;
+  /** Full width */
+  fullWidth?: boolean;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  class: className = '',
+  type = 'button',
+  disabled = false,
+  fullWidth = false,
+} = Astro.props;
+
+// Build class list
+const classes = [
+  'btn',
+  `btn-${variant}`,
+  `btn-${size}`,
+  fullWidth && 'btn-full',
+  disabled && 'btn-disabled',
+  className,
+].filter(Boolean).join(' ');
+
+// Determine which element to render
+const Tag = href ? 'a' : 'button';
+
+// Common attributes
+const attrs = {
+  class: classes,
+  ...(href ? { href } : { type, disabled }),
+};
+---
+
+<Tag {...attrs}>
+  <slot />
+</Tag>
+
+<style>
+  /* Base button styles */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-family);
+    font-size: var(--type-button-size);
+    font-weight: var(--type-button-weight);
+    line-height: 1.5;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    border: none;
+    transition:
+      background-color var(--duration-short3) var(--ease-standard),
+      color var(--duration-short3) var(--ease-standard),
+      border-color var(--duration-short3) var(--ease-standard),
+      box-shadow var(--duration-short3) var(--ease-standard),
+      transform var(--duration-short2) var(--ease-standard);
+  }
+
+  .btn:active:not(.btn-disabled) {
+    transform: scale(0.98);
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--color-primary-main);
+    outline-offset: 2px;
+  }
+
+  /* Size variants */
+  .btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 13px;
+    border-radius: var(--radius-extra-small);
+  }
+
+  .btn-md {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-small);
+  }
+
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 16px;
+    border-radius: var(--radius-marketing-stadium-button);
+  }
+
+  /* Primary variant - uses marketing purple */
+  .btn-primary {
+    background-color: var(--mkt-color-primary);
+    color: white;
+    box-shadow: var(--shadow-primary-purple);
+  }
+
+  .btn-primary:hover:not(.btn-disabled) {
+    background-color: var(--mkt-color-primary-hover);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* Secondary variant */
+  .btn-secondary {
+    background-color: var(--color-canvas);
+    color: var(--color-text-primary);
+  }
+
+  .btn-secondary:hover:not(.btn-disabled) {
+    background-color: var(--color-divider);
+  }
+
+  /* Outline variant */
+  .btn-outline {
+    background-color: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-divider);
+  }
+
+  .btn-outline:hover:not(.btn-disabled) {
+    background-color: var(--color-canvas);
+    border-color: var(--color-text-secondary);
+  }
+
+  /* Ghost variant */
+  .btn-ghost {
+    background-color: transparent;
+    color: var(--color-text-primary);
+  }
+
+  .btn-ghost:hover:not(.btn-disabled) {
+    background-color: var(--color-canvas);
+  }
+
+  /* Full width */
+  .btn-full {
+    width: 100%;
+  }
+
+  /* Disabled state */
+  .btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>

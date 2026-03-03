@@ -1,0 +1,62 @@
+---
+/**
+ * Testimonial — Centred blockquote with attribution
+ * 
+ * Full-width quote strip matching beings.com/interview-transcription.
+ * Uses italic serif-style rendering for the quote text.
+ */
+
+interface Props {
+  quote: string;
+  name: string;
+  title: string;
+  company: string;
+}
+
+const { quote, name, title, company } = Astro.props;
+---
+
+<blockquote class="testimonial">
+  <p class="testimonial-quote">&ldquo;{quote}&rdquo;</p>
+  <footer class="testimonial-attribution">
+    &mdash; {name}, {title} at {company}.
+  </footer>
+</blockquote>
+
+<style>
+  .testimonial {
+    max-width: 800px;
+    margin-inline: auto;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    border: none;
+    background: #f8fafd;
+    border-radius: 16px;
+  }
+
+  .testimonial-quote {
+    font-size: 1.25rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--color-text-primary, #1A1D2E);
+    line-height: 1.75rem;
+    margin: 0;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .testimonial-attribution {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary, #5f6368);
+    font-style: normal;
+  }
+
+  @media (max-width: 599px) {
+    .testimonial-quote {
+      font-size: 1.125rem;
+      line-height: 1.625rem;
+    }
+  }
+</style>

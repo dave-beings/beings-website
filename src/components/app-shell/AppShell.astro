@@ -65,8 +65,9 @@ const { class: className, hideRail = false } = Astro.props;
     background: var(--shell-canvas);
   }
 
-  /* Mobile: Stack vertically, hide rail */
-  @media (max-width: 768px) {
+  /* Mobile: Stack vertically, hide rail
+   * M3 fidelity fix: 768px → 599px (M3 compact boundary) */
+  @media (max-width: 599px) {
     .app-shell {
       grid-template-columns: 1fr;
     }

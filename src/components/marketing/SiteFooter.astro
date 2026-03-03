@@ -1,0 +1,147 @@
+---
+/**
+ * SiteFooter — Logo + 4-column grid footer
+ * 
+ * Matches beings.com layout: logo → columns → copyright.
+ * Columns: Platform, Solutions, Learning, About.
+ */
+
+const columns = [
+  {
+    title: 'Platform',
+    links: [
+      { label: 'Prepare', href: '/prepare' },
+      { label: 'Recruit', href: '/recruit' },
+      { label: 'Study', href: '/study' },
+      { label: 'Insights', href: '/insights' },
+      { label: 'Act', href: '/act' },
+    ],
+  },
+  {
+    title: 'Solutions',
+    links: [
+      { label: 'Enterprise', href: '/enterprise' },
+      { label: 'Agencies', href: '/agencies' },
+      { label: 'Pricing', href: '/pricing' },
+    ],
+  },
+  {
+    title: 'Learning',
+    links: [
+      { label: 'Blog', href: '/blog' },
+    ],
+  },
+  {
+    title: 'About',
+    links: [
+      { label: 'Terms & Conditions', href: '/terms' },
+      { label: 'Privacy Policy', href: '/privacy' },
+      { label: 'Cookie Policy', href: '/cookies' },
+      { label: 'DPA', href: '/dpa' },
+      { label: 'Modern Slavery Policy', href: '/modern-slavery' },
+    ],
+  },
+];
+---
+
+<footer class="site-footer">
+  <div class="footer-logo">
+    <img src="/favicon.svg" alt="Beings" class="footer-logo-img" />
+    <span class="footer-logo-text">Beings</span>
+  </div>
+  <div class="footer-grid">
+    {columns.map((col) => (
+      <div class="footer-col">
+        <h3 class="footer-col-title">{col.title}</h3>
+        <ul class="footer-links">
+          {col.links.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copyright">© {new Date().getFullYear()} Beings. All Rights Reserved.</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-divider);
+    padding: 3rem 0 2rem;
+    width: 100%;
+    max-width: 800px;
+    margin-inline: auto;
+  }
+
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .footer-logo-img {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .footer-logo-text {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #1A1D2E);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+
+  .footer-col-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 1rem;
+  }
+
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .footer-links a {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .footer-bottom {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-divider);
+  }
+
+  .footer-copyright {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  @media (max-width: 599px) {
+    .footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .footer-bottom {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+  }
+</style>

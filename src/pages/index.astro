@@ -1,14 +1,19 @@
 ---
 /**
- * Homepage
+ * Homepage — Marketing landing page
  * 
- * Shell-first marketing page using the AppShell layout.
- * Content lives inside the floating white panel.
- * 
- * @see docs/bw-prd-01-rebrand.xml
+ * Hero → Bento cards → Content block → CTA → Footer
+ * All spacing via flex gap on .page-flow container.
  */
 
 import AppShell from '../components/app-shell/AppShell.astro';
+import HeroCard from '../components/marketing/HeroCard.astro';
+import BentoCardsInteractive from '../components/marketing/BentoCardsInteractive';
+import ContentBlock from '../components/marketing/ContentBlock.astro';
+import Testimonial from '../components/marketing/Testimonial.astro';
+import HowItWorks from '../components/marketing/HowItWorks.astro';
+import FinalCta from '../components/marketing/FinalCta.astro';
+import SiteFooter from '../components/marketing/SiteFooter.astro';
 import '../styles/global.css';
 ---
 
@@ -17,49 +22,126 @@ import '../styles/global.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Beings | AI-Powered Qualitative Research</title>
-    <meta name="description" content="Beings helps researchers analyze qualitative data faster with AI-powered coding, theming, and insights." />
+    <title>Beings | Research Transcription</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
     </style>
   </head>
   <body>
     <AppShell>
-      <!-- Marketing content goes here (Phase 2) -->
-      <div class="empty-state">
-        <p>Beings</p>
-        <small>Marketing content coming in Phase 2</small>
+      <div class="page-flow">
+        <HeroCard />
+        <BentoCardsInteractive client:visible />
+        <nav class="trust-pills" aria-label="Quick links">
+          <a class="trust-pill" href="#formats">High-fidelity transcripts</a>
+          <a class="trust-pill" href="#uploads">Unlimited uploads</a>
+          <a class="trust-pill" href="#intelligence">Research intelligence</a>
+          <a class="trust-pill" href="#security">Secure & compliant</a>
+        </nav>
+        <ContentBlock
+          id="formats"
+          heading="High-fidelity research transcripts"
+          body="Beings' transcription is fast, secure and accurate. Allowing your research team to capture nuance and context, without spending hours manually transcribing interviews."
+          imageSrc="/images/transcript-editor.jpg"
+          imageAlt="Transcript editor showing speaker labels and timestamps"
+        />
+        <ContentBlock
+          id="uploads"
+          heading="Unlimited uploads, transcription & AI-indexing"
+          body="Upload video, audio or text and let Beings transcribe and AI-index it for free. Quickly turn interviews, focus groups, and PDFs into context to inform your strategic analysis. With the power to use AI to uncover insight."
+          imageAlt="Upload interface showing supported file types"
+          imagePosition="left"
+        />
+        <ContentBlock
+          id="intelligence"
+          heading="Build your research intelligence"
+          body="Each uploaded transcript strengthens your agency's knowledge base, creating your organisation's institutional memory. The more conversations you add, the more personalised reasoning across your entire research model."
+          imageAlt="Knowledge base growing with connected research files"
+        />
+        <Testimonial
+          quote="Using AI now is about efficiency. Beings helps us save hours of manual work – pulling insights automatically and freeing up time for interpretation and strategy."
+          name="Jessica Baxter"
+          title="Account Director"
+          company="SBC"
+        />
+        <ContentBlock
+          id="security"
+          heading="Secure, compliant, and built for professional research"
+          body="All transcripts are processed through Beings' multi-corpus architecture, ensuring every conversation is stored with clear boundaries between personal, project, and organisational knowledge."
+          imageAlt="Security architecture with data boundaries"
+          imagePosition="left"
+        />
+        <HowItWorks />
+        <FinalCta />
+        <SiteFooter />
       </div>
     </AppShell>
   </body>
 </html>
 
 <style>
-  .empty-state {
+  .page-flow {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    min-height: calc(100vh - 1rem);
-    color: var(--shell-text-secondary);
-    text-align: center;
+    gap: var(--layout-section-gap); /* 2rem / 32px */
+    padding-top: 4rem; /* 64px — reserve top app bar height */
+  }
+
+  .trust-pills {
+    display: flex;
+    justify-content: flex-start;
     gap: 0.5rem;
+    flex-wrap: wrap;
+    width: 800px; /* match content block width */
+    max-width: 100%;
+    margin-inline: auto;
+    margin-block: 1rem; /* 16px extra above & below → total 48px clearspace */
   }
 
-  .empty-state p {
-    font-size: 1.25rem;
+  .trust-pill {
+    height: 2rem;
+    padding: 0 0.75rem;
+    border-radius: 9999px;
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--color-text-primary, #1A1D2E);
+    font-size: 0.75rem;
     font-weight: 500;
-    color: var(--shell-text-primary);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    text-decoration: none;
+    transition: background 150ms ease;
+    cursor: pointer;
   }
 
-  .empty-state small {
-    font-size: 0.875rem;
+  .trust-pill:hover {
+    background: rgba(0, 0, 0, 0.08);
+  }
+</style>
+
+<script>
+  // Smooth scroll within .panel-content container (AppShell traps overflow)
+  document.querySelectorAll('.trust-pill[href^="#"]').forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = (e.currentTarget as HTMLAnchorElement).getAttribute('href')?.slice(1);
+      if (!id) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+      const scroller = document.querySelector('.panel-content') || window;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+<style is:inline>
+  /* scroll-margin so anchored sections aren't hidden behind the top bar */
+  .content-block[id] {
+    scroll-margin-top: 5rem;
   }
 </style>

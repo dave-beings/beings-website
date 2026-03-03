@@ -64,8 +64,10 @@
   /* Panel corner radius */
   --shell-panel-radius: 0.75rem;          /* 12px - dockview group radius */
   
-  /* Panel border - creates the "floating" effect */
-  --shell-panel-border-width: 3.75px;     /* Exact from DevTools */
+  /* Panel border — creates the "floating" effect
+   * @invariant DES-03: Must be 4px (0.25rem) — on the baseline grid.
+   * BW-02 Task 1.6: Corrected from 3.75px magic number → 0.25rem */
+  --shell-panel-border-width: 0.25rem;    /* 4px — on baseline grid */
   --shell-panel-border: var(--shell-panel-border-width) solid var(--shell-canvas);
   
   /* Rail border - subtle right separator */
@@ -84,6 +86,20 @@
   
   /* Content area padding (from FlatMainLayout.tsx) */
   --shell-content-padding: 0.5rem;        /* 8px - theme.spacing(1) */
+
+  /* ===== MARKETING LAYOUT SPACING =====
+   * Derived from the PRODUCT spacing scale (design-tokens.context.ts).
+   * Product max is xxl (32px / 2rem). No invented values.
+   *
+   * section-gap:   --space-8  (2rem)    — between major sections
+   * group-gap:     --space-4  (1rem)    — between related items
+   * component-gap: --space-2  (0.5rem)  — between cards in a row
+   * hero-top:      --space-6  (1.5rem)  — breathing room above hero
+   */
+  --layout-section-gap: var(--space-8);     /* 2rem / 32px */
+  --layout-group-gap: var(--space-4);       /* 1rem / 16px */
+  --layout-component-gap: var(--space-2);   /* 0.5rem / 8px */
+  --layout-hero-top: var(--space-6);        /* 1.5rem / 24px */
 }
 
 /* Dark mode: All colors inherit automatically from brand-tokens.css */

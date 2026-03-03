@@ -1,0 +1,60 @@
+---
+/**
+ * RiskHook — Problem statement that sets up the trust narrative
+ * 
+ * BW-02 Enterprise Skeleton
+ * A single, bold statement that names the risk agencies face.
+ * Grayscale only.
+ * 
+ * Height: ~120px
+ */
+
+interface Props {
+  headline?: string;
+  subtext?: string;
+}
+
+const {
+  headline = 'Public AI puts your client contracts at risk.',
+  subtext = 'Every transcript uploaded to a cloud LLM is a potential data breach. Your clients\u2019 commercial secrets deserve sovereign protection.',
+} = Astro.props;
+---
+
+<div class="risk-hook">
+  <p class="risk-headline">{headline}</p>
+  <p class="risk-subtext">{subtext}</p>
+</div>
+
+<style>
+  .risk-hook {
+    text-align: center;
+    padding: 2rem 0;
+    max-width: 50rem; /* 800px — readable line length */
+    margin-inline: auto;
+  }
+
+  .risk-headline {
+    font-size: 1.75rem; /* 28px */
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+    margin: 0 0 0.75rem;
+  }
+
+  .risk-subtext {
+    font-size: 1.125rem; /* 18px */
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (max-width: 599px) {
+    .risk-headline {
+      font-size: 1.375rem;
+    }
+    .risk-subtext {
+      font-size: 1rem;
+    }
+  }
+</style>

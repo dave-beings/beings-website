@@ -1,0 +1,132 @@
+---
+/**
+ * FinalCta — Bottom-of-page conversion block
+ * 
+ * Echoes the hero's lavender gradient and the bento card language.
+ * Dark text on light gradient, with brand-blue primary CTA pill.
+ */
+
+interface Props {
+  headline?: string;
+  subtext?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+
+const {
+  headline = 'The first step to automated, reliable research intelligence',
+  subtext = 'See how Beings can support your research analysis and workflow, and help you see what others may miss. Get started with a free account today.',
+  primaryLabel = 'Get started',
+  primaryHref = '/signup',
+  secondaryLabel = 'Talk to our team',
+  secondaryHref = '/contact',
+} = Astro.props;
+---
+
+<div class="final-cta">
+  <h2 class="cta-headline">{headline}</h2>
+  <p class="cta-subtext">{subtext}</p>
+  <div class="cta-actions">
+    <a href={primaryHref} class="cta-primary">{primaryLabel}</a>
+    <a href={secondaryHref} class="cta-secondary">{secondaryLabel}</a>
+  </div>
+</div>
+
+<style>
+  .final-cta {
+    text-align: center;
+    padding: 3.5rem 2rem;
+    background:
+      radial-gradient(ellipse 120% 80% at 20% 100%, #e3ebff 0%, transparent 60%),
+      radial-gradient(ellipse 100% 80% at 80% 0%, #f3e8fd 0%, transparent 50%),
+      #f8fafd;
+    border-radius: 1.75rem; /* 28px — matches hero card */
+    min-height: 17.5rem;
+    max-width: 800px;
+    width: 100%;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  .cta-headline {
+    font-size: 1.75rem;
+    font-weight: 400; /* M3 headline weight */
+    color: var(--color-text-primary, #1A1D2E);
+    margin: 0;
+    line-height: 2.25rem;
+    max-width: 28rem;
+  }
+
+  .cta-subtext {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary, #5f6368);
+    margin: 0;
+    max-width: 32rem;
+    line-height: 1.5;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    height: 3rem;
+    padding: 0 2rem;
+    border-radius: 9999px;
+    background: #0B57D0; /* marketing blue — matches hero Transcribe button */
+    color: white;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 200ms ease;
+  }
+
+  .cta-primary:hover {
+    background: #0842a0;
+  }
+
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    height: 3rem;
+    padding: 0 2rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-divider, #dadce0);
+    background: white;
+    color: var(--color-text-primary, #1A1D2E);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 200ms ease, border-color 200ms ease;
+  }
+
+  .cta-secondary:hover {
+    background: #f8fafd;
+    border-color: #c4c7cc;
+  }
+
+  @media (max-width: 599px) {
+    .cta-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+    .cta-primary,
+    .cta-secondary {
+      justify-content: center;
+      width: 100%;
+    }
+    .cta-headline {
+      font-size: 1.5rem;
+    }
+  }
+</style>

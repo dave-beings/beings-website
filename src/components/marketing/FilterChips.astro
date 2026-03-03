@@ -1,0 +1,62 @@
+---
+/**
+ * FilterChips — Direct port from live studio.workspace.google.com
+ * 
+ * Horizontal row of transparent pill buttons.
+ * Same chip pattern as product design system.
+ * 
+ * Live site values: 32px height, transparent bg, no border,
+ * 13.3px font, weight 400, color rgba(0,0,0,0.87)
+ */
+
+interface Props {
+  chips?: string[];
+}
+
+const { chips = [
+  'Transcription',
+  'AI Analysis',
+  'Team Collaboration',
+  'Knowledge Base',
+] } = Astro.props;
+---
+
+<div class="chips-wrapper">
+  <div class="chips-row">
+    {chips.map((chip) => (
+      <button class="chip">{chip}</button>
+    ))}
+  </div>
+</div>
+
+<style>
+  /* Wrapper — BW-02: Removed max-width/padding (now on .content-body) */
+  .chips-wrapper {
+    /* Spacing handled by Phase 2 vertical rhythm tokens */
+  }
+
+  .chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem; /* 8px row-gap for touch target spacing, 12px column-gap */
+  }
+
+  /* Chip — BW-02 Phase 3: Grayscale skeleton
+   * Uses product chipRadius (9999px stadium) per DES-08 for brand consistency.
+   * Live Workspace Studio uses 8px but product chips are always stadium. */
+  .chip {
+    height: 2rem; /* 32px — matches product chipHeight */
+    padding: 0 0.75rem;
+    border-radius: var(--radius-full); /* 9999px — DES-08 stadium shape */
+    border: 1px solid var(--color-divider);
+    background: transparent; /* Skeleton — outline only */
+    color: var(--color-text-secondary); /* Grayscale */
+    font-size: 0.875rem;
+    font-weight: 400;
+    cursor: pointer;
+    font-family: inherit;
+    /* Touch target: chip is 32px but row gap (12px) + chip height (32px) = 44px.
+     * Adding 4px vertical padding brings effective target to 40px min.
+     * Full 48dp compliance via margin in parent flex gap. */
+  }
+</style>

@@ -17,12 +17,16 @@ html {
   color: var(--color-text-primary);
   background-color: var(--color-background);
   scroll-behavior: smooth;
+  /* BW-02 Task 1.1: Lock viewport — AppShell owns all scrolling */
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
-  min-height: 100vh;
+  height: 100%;
+  overflow: hidden; /* BW-02 Task 1.1: Prevent double scrollbar — .panel-content scrolls */
   line-height: var(--line-height-relaxed);
-  background-color: var(--color-background);  /* Explicit bg for shell pages */
+  background-color: var(--color-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -45,6 +49,8 @@ h6 { font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold); }
 p {
   color: var(--color-text-secondary);
   line-height: var(--line-height-relaxed);
+  /* Removed global max-width: 65ch — was squashing paragraphs
+   * inside flex layouts. Let components handle their own width. */
 }
 
 a {
@@ -62,6 +68,13 @@ a:hover {
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* BW-02 Task 1.5: WCAG 2.2 AA — Focus Not Obscured (SC 2.4.11)
+ * Anchor links and focused elements must not hide behind
+ * the sidebar rail or any future sticky header. */
+[id] {
+  scroll-margin-top: 5rem;
 }
 
 /* ===== SELECTION ===== */

@@ -1,0 +1,146 @@
+---
+/**
+ * CaseStudy — Enterprise testimonial with compliance angle
+ * 
+ * BW-02 Enterprise Skeleton
+ * Quote from a research director + measurable outcome.
+ * Grayscale only — photo placeholder.
+ * 
+ * Height: ~300px
+ */
+
+interface Props {
+  quote?: string;
+  author?: string;
+  role?: string;
+  org?: string;
+  metric?: string;
+  metricLabel?: string;
+}
+
+const {
+  quote = 'Beings let us process 200 hours of interviews in a week — without a single file leaving our infrastructure. Our clients in financial services wouldn\'t accept anything less.',
+  author = 'Research Director',
+  role = 'Head of Qualitative Research',
+  org = 'Tier 1 UK Research Agency',
+  metric = '40%',
+  metricLabel = 'faster time to insight',
+} = Astro.props;
+---
+
+<div class="case-study">
+  <div class="case-quote-side">
+    <blockquote class="case-quote">
+      <p>"{quote}"</p>
+    </blockquote>
+    <div class="case-author">
+      <div class="author-avatar" aria-hidden="true"></div>
+      <div class="author-info">
+        <span class="author-name">{author}</span>
+        <span class="author-role">{role}, {org}</span>
+      </div>
+    </div>
+  </div>
+  <div class="case-metric-side">
+    <span class="metric-value">{metric}</span>
+    <span class="metric-label">{metricLabel}</span>
+  </div>
+</div>
+
+<style>
+  .case-study {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    background: #fafafa;
+    border-radius: 1.75rem; /* 28px — M3 extraLarge */
+    padding: 3rem;
+    min-height: 18.75rem; /* 300px */
+  }
+
+  .case-quote-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .case-quote {
+    margin: 0;
+  }
+
+  .case-quote p {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    font-style: italic;
+    margin: 0;
+  }
+
+  .case-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .author-avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: #d5d5d5;
+    flex-shrink: 0;
+  }
+
+  .author-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .author-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .author-role {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+  }
+
+  .case-metric-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 12rem;
+    text-align: center;
+  }
+
+  .metric-value {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1;
+  }
+
+  .metric-label {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 599px) {
+    .case-study {
+      flex-direction: column;
+      padding: 2rem 1.5rem;
+    }
+    .case-metric-side {
+      width: 100%;
+    }
+    .metric-value {
+      font-size: 3rem;
+    }
+  }
+</style>

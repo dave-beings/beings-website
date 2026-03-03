@@ -1,0 +1,103 @@
+---
+/**
+ * EnterpriseGovernance — IT Director checklist block
+ * 
+ * BW-02 Enterprise Skeleton
+ * Lists enterprise controls: SSO, RBAC, audit trails, retention.
+ * Grayscale only.
+ * 
+ * Height: ~300px
+ */
+
+const features = [
+  { title: 'SSO / SAML', desc: 'Single sign-on with your identity provider. Okta, Azure AD, Google Workspace.' },
+  { title: 'Role-Based Access', desc: 'Granular permissions. Researchers, reviewers, and admins see only what they should.' },
+  { title: 'Audit Trails', desc: 'Every action logged. Who accessed what, when, and from where. Export-ready for compliance.' },
+  { title: 'Data Retention Policies', desc: 'Configurable auto-deletion. Meet client contracts and regulatory timelines automatically.' },
+];
+---
+
+<div class="governance">
+  <div class="governance-header">
+    <h2 class="governance-title">Enterprise controls your IT team expects</h2>
+    <p class="governance-subtitle">Built to clear procurement, not circumvent it.</p>
+  </div>
+
+  <div class="governance-grid">
+    {features.map((feat) => (
+      <div class="gov-card">
+        <div class="gov-icon-placeholder" aria-hidden="true"></div>
+        <h3 class="gov-card-title">{feat.title}</h3>
+        <p class="gov-card-desc">{feat.desc}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .governance {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .governance-header {
+    text-align: center;
+  }
+
+  .governance-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.5rem;
+    line-height: 1.3;
+  }
+
+  .governance-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .governance-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--layout-component-gap);
+  }
+
+  .gov-card {
+    background: #fafafa;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .gov-icon-placeholder {
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #e0e0e0;
+    border-radius: 0.5rem;
+  }
+
+  .gov-card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .gov-card-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (max-width: 599px) {
+    .governance-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

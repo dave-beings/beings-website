@@ -1,0 +1,105 @@
+---
+/**
+ * TrustBar — Social proof + compliance badges
+ * 
+ * BW-02 Enterprise Skeleton
+ * Split layout: client logos LEFT, compliance badges RIGHT.
+ * Grayscale only — no color, no shadows.
+ * 
+ * Height: ~80px
+ */
+---
+
+<div class="trust-bar">
+  <div class="trust-logos">
+    <span class="trust-label">Trusted for sensitive research by</span>
+    <div class="logo-row">
+      {['Agency A', 'Agency B', 'Agency C', 'Agency D', 'Agency E'].map((name) => (
+        <div class="logo-placeholder" aria-label={name}>
+          <span class="logo-text">{name}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+  <div class="trust-badges">
+    <div class="badge">ISO 27001</div>
+    <div class="badge">Cyber Essentials+</div>
+  </div>
+</div>
+
+<style>
+  .trust-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 5rem; /* 80px */
+    padding: 1rem 0;
+  }
+
+  .trust-logos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .trust-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* M3 touch target fix: logos are decorative in skeleton but must
+   * meet 48dp minimum if they become interactive links */
+  .logo-placeholder {
+    width: 5rem;
+    height: 3rem; /* 48px — M3 minimum touch target */
+    background: #e0e0e0;
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-text {
+    font-size: 0.5rem;
+    color: #999;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .trust-badges {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-divider);
+    border-radius: var(--radius-full);
+    padding: 0.25rem 0.75rem;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 599px) {
+    .trust-bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .logo-row {
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+/**
+ * ComplianceStrip — Narrow compliance badge row
+ * 
+ * BW-02 Enterprise Skeleton
+ * High-density acronym row for procurement teams.
+ * Grayscale only.
+ * 
+ * Height: ~64px
+ */
+
+const badges = [
+  'Cyber Essentials+',
+  'ISO 27001',
+  'NHS DSPT',
+  'GDPR',
+  'UK DPA 2018',
+  'ICO Registered',
+];
+---
+
+<div class="compliance-strip">
+  {badges.map((badge) => (
+    <span class="compliance-badge">{badge}</span>
+  ))}
+</div>
+
+<style>
+  .compliance-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 1rem 0;
+    min-height: 4rem; /* 64px */
+  }
+
+  .compliance-badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  /* Separator dots between badges */
+  .compliance-badge:not(:last-child)::after {
+    content: '·';
+    margin-left: 1.5rem;
+    color: var(--color-divider);
+  }
+</style>
