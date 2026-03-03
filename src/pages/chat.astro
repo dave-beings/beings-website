@@ -1,0 +1,213 @@
+---
+import '../styles/brand-tokens.css';
+
+const WA_LINK = 'https://wa.me/442045720044?text=Hey%20Aida%2C%20I%27m%20new%20here.%20My%20name%20is%20';
+const QR_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(WA_LINK)}&bgcolor=FFFFFF&color=1A1D2E&format=png`;
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talk to Aida — Beings</title>
+    <meta name="description" content="Your sovereign active memory. Lives in WhatsApp." />
+    <meta property="og:title" content="Talk to Aida" />
+    <meta property="og:description" content="Your memory. Getting smarter while you sleep." />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;600;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <span class="brand">Beings</span>
+        <span class="status"><span class="status-dot"></span>Online</span>
+      </div>
+
+      <div class="hero">
+        <h1>Your memory.<br />Getting smarter<br />while you sleep.</h1>
+        <p>Aida is your sovereign active memory. She lives in WhatsApp. She remembers everything you tell her.</p>
+        <p class="edge">She will remember everything. Choose your words.</p>
+      </div>
+
+      <a class="cta" href={WA_LINK}>Start talking to Aida</a>
+
+      <div class="qr-section">
+        <canvas id="qr" width="160" height="160"></canvas>
+        <span class="qr-label">Scan to open in WhatsApp</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="https://website.beings.com">beings.com</a>
+    </div>
+
+    <script define:vars={{ QR_SRC }}>
+      (function() {
+        var c = document.getElementById('qr');
+        if (!c || getComputedStyle(c.parentElement).display === 'none') return;
+        var ctx = c.getContext('2d');
+        var img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, 160, 160);
+          ctx.drawImage(img, 0, 0, 160, 160);
+        };
+        img.src = QR_SRC;
+      })();
+    </script>
+  </body>
+</html>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: var(--font-family, 'Roboto Flex', 'Helvetica', 'Arial', sans-serif);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6) var(--space-4);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .card {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--elevation-2);
+    max-width: 440px;
+    width: 100%;
+    padding: var(--space-12) var(--space-8) var(--space-10);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  .status {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.6875rem;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.7;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--color-secondary);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-snug);
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  .hero p {
+    margin-top: var(--space-3);
+    font-size: 0.9375rem;
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-secondary);
+  }
+
+  .hero .edge {
+    margin-top: var(--space-2);
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  .cta {
+    display: block;
+    width: 100%;
+    padding: 14px var(--space-6);
+    background: var(--color-primary);
+    color: #FFFFFF;
+    font-family: var(--font-family, 'Roboto Flex', sans-serif);
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-standard),
+                transform var(--duration-fast) var(--ease-standard);
+  }
+
+  .cta:hover {
+    background: var(--color-primary-dark);
+    color: #FFFFFF;
+  }
+
+  .cta:active { transform: scale(0.98); }
+
+  .qr-section {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-divider);
+  }
+
+  .qr-label {
+    font-size: 0.6875rem;
+    color: var(--color-text-secondary);
+    font-family: 'Roboto Mono', monospace;
+    opacity: 0.7;
+  }
+
+  .footer {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-top: var(--space-6);
+    opacity: 0.7;
+  }
+
+  .footer a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+  }
+
+  .footer a:hover { color: var(--color-text-primary); }
+
+  @media (min-width: 768px) {
+    .card { padding: 56px var(--space-10) var(--space-12); }
+    .hero h1 { font-size: var(--font-size-4xl); }
+    .qr-section { display: flex; }
+  }
+</style>
