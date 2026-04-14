@@ -12,3 +12,7 @@ dist/
 build/
 .astro/
 .DS_Store
+
+# Animations workspace
+animations/node_modules/
+animations/out/
