@@ -69,10 +69,9 @@ Use React only where JavaScript interactivity is required. Astro components hand
 
 Marketing copy lives in Astro/MDX files in git. No CMS, no database, no server runtime.
 
-## Your Machine & Fleet
+## Workspace Classification
 
-Classification: GREEN (public GitHub, full scratchpad access).
-See `tooling/core/fleet-primer.md` for machine specs and fleet topology.
+GREEN — public GitHub, no PII processing.
 
 ## What You Do
 
@@ -80,7 +79,7 @@ See `tooling/core/fleet-primer.md` for machine specs and fleet topology.
 - **Maintain visual fidelity** — the site must match the product's design language exactly
 - **Optimise for performance** — Lighthouse 95+ on all metrics, SSG by default
 - **Ship accessible HTML** — semantic markup, ARIA labels, keyboard navigation, focus management
-- **Capture decisions** — write design/architectural decisions to scratchpad via `context_write`
+- **Capture decisions** — record design/architectural decisions inline in `docs/architecture.md` or as ADRs
 
 ## What You Don't Do
 
@@ -101,13 +100,13 @@ npx wrangler pages deploy dist        # Deploy to Cloudflare Pages
 
 Production: https://website.beings.com (`beings-marketing.pages.dev`)
 
-## Fleet Context
+## Local Tooling
 
-Rules, skills, commands, and hooks come from `beings-context` (Governance Repo) via symlinks. Do not modify them locally — changes go to `beings-context`.
+Rules, skills, and commands live locally under `.cursor/` — edit them in place.
 
-| Tool | Purpose |
+| MCP Server | Purpose |
 |------|---------|
-| `context_write` | Log design decisions to scratchpad |
-| `context_read` | Read scratchpad entries |
-| `context_query_recent` | Query recent scratchpad activity |
-| `get_file_skeleton` | Inspect file structure without reading full content |
+| `chrome-devtools` | Drive an external Chrome on `:9222` for browser testing (see `core-browser-testing.mdc`) |
+| `cloudflare-api` | Cloudflare platform operations (Pages deploys, DNS, observability) |
+
+Cross-model consultation skills (`second-opinion`, `consulting-api`, `red-team-gemini-loop`) call out to Gemini Web UI / Claude / GPT APIs via the vendored `gemini-bridge.ts` and `consult.ts`. See `core-consultation-routing.mdc`.

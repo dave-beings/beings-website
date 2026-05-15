@@ -830,10 +830,7 @@ This file is the narrative companion to `llms.txt` (routing) and
    Update when a decision changes the why.
 4. **`llms.txt`** — routing map and section anchors for AI agents.
    Update when the file/directory map or canonical references change.
-5. **Scratchpad (`context_write`, category `decision`)** — log every
-   architectural or positioning decision so the dreaming pipeline picks
-   it up.
 
-Keep these five artefacts in sync; treat any drift as a bug. When the
+Keep these four artefacts in sync; treat any drift as a bug. When the
 vision doc and the PRD disagree, the vision doc wins on positioning and
 the PRD is updated to match — not the other way around.
