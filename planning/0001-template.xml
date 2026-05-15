@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Planning spec template for the Beings marketing site.
+
+  Schema mirrors beings-local planning XML so the build-fast loop can parse
+  both workspaces with the same Step 1 parser. Clone this file as
+  planning/<NNNN>-<slug>.xml and adjust IDs, dates, and phases.
+
+  Conventions:
+    - Filename: planning/NNNN-<kebab-slug>.xml, NNNN zero-padded, monotonically
+      increasing.
+    - Top-level element: <plan id="…" version="…" created="YYYY-MM-DD"
+      status="draft|in-progress|complete|deferred" depends-on="…">.
+    - status values: draft, in-progress, complete, deferred.
+    - Phase IDs: P1, P2, …; each phase MUST contain <description>, optional
+      <change> elements, optional <tests>, optional <invariants>.
+    - <change file="…"> describes a file to be created or modified. Body is the
+      summary of changes to make in that file (prose, not a diff).
+-->
+
+<plan id="hero-card-brand-tokens"
+      version="1"
+      created="2026-05-15"
+      status="draft"
+      depends-on="none">
+
+  <context>
+    The homepage hero card (`src/components/marketing/HeroCard.astro`) is the
+    first thing a visitor sees on `website.beings.com`. The current implementation
+    uses ad-hoc font sizes, hardcoded colours, and inline shadow rules that
+    bypass the brand-token SSOT defined in `src/styles/brand-tokens.css`.
+
+    This spec replaces the hardcoded values with brand-token references and
+    extracts the headline/subhead typography into a small, reusable type scale
+    that other marketing sections (`FeatureGrid`, `CTASection`, `PricingTable`)
+    will adopt in follow-up specs. The result is one place to change marketing
+    typography, full dark-mode support without component-level conditionals,
+    and Lighthouse-friendly CSS (no redundant declarations across sections).
+
+    Reference materials:
+      - docs/architecture.md §7 (Brand Token System)
+      - docs/bw-prd-01-rebrand.xml &lt;component name="HeroMain" priority="P0"&gt;
+      - src/styles/brand-tokens.css
+      - .cursor/rules/brand.mdc (anti-patterns)
+  </context>
+
+  <problem-statement>
+    The hero card currently:
+
+    1. Hardcodes `#1A1D2E` for the headline colour instead of
+       `var(--color-text-primary)`.
+    2. Uses `font-size: 56px` literally instead of a token like
+       `--font-size-hero` (which does not yet exist and should be added).
+    3. Applies a custom `box-shadow: 0 12px 32px rgba(0,0,0,0.12)` instead of
+       referencing `--elevation-3`.
+    4. Defines a one-off rounded-corner value (`border-radius: 20px`) that
+       sits between `--radius-lg` (16px) and `--radius-xl` (28px), breaking
+       the M3 scale.
+    5. Does not visually adapt to dark mode because all colour values are
+       baked into component CSS rather than driven by token references.
+
+    Together these block consistent dark-mode rendering, force every
+    typography tweak to touch the component, and make the section the canary
+    for visual drift between the marketing site and the product.
+  </problem-statement>
+
+  <goal>
+    After this spec ships:
+
+    1. Every visible style in `HeroCard.astro` resolves through a brand token.
+    2. `--font-size-hero` and `--line-height-hero` exist in `brand-tokens.css`
+       and are used by the headline.
+    3. Dark mode is correct without any component-level conditional logic.
+    4. Lighthouse accessibility audit shows no contrast regressions in light
+       or dark mode.
+    5. The component compiles cleanly under `npm run build` and renders
+       identically (to the eye) in light mode and correctly in dark mode.
+  </goal>
+
+  <thesis>
+    Tokens are the cheapest unit of consistency. Centralising headline
+    typography removes the temptation for each new marketing section to
+    invent its own scale. The hero is the highest-traffic, highest-leverage
+    place to anchor the type system because every subsequent section will
+    reference back to "the hero typography."
+
+    Alternative considered: introduce a `Headline` component that bundles
+    font-size + line-height + colour. Rejected for now — the Astro components
+    are small enough that direct token references in component CSS are
+    clearer than another wrapper layer. Revisit if more than three marketing
+    sections need the same scale and start drifting.
+  </thesis>
+
+  <invariants>
+    - `src/styles/brand-tokens.css` remains the SSOT for all visual values.
+    - No hex colours, raw px sizes, or custom `box-shadow` declarations in
+      component code after this spec.
+    - The site builds with `output: 'static'` (no SSR introduced).
+    - No new client directives added to the hero — it remains a fully static
+      `.astro` component.
+    - PRD priorities are not changed; this spec implements an existing P0
+      component, not a new one.
+  </invariants>
+
+  <phases>
+
+    <phase id="P1" name="add-hero-typography-tokens" priority="high" estimate="20min">
+      <description>
+        Add hero-scale typography tokens to the brand-tokens stylesheet.
+        Tokens must be defined in both the light-mode `:root` block and the
+        `[data-theme="dark"]` block where the values differ. Hero font size
+        and line height are the same in both modes; this phase only adds
+        tokens, no usage changes yet.
+      </description>
+      <change file="src/styles/brand-tokens.css">
+        Add the following inside the `:root` block, in the TYPOGRAPHY section,
+        immediately after `--font-size-5xl`:
+
+          --font-size-hero: 3.5rem;        /* 56px */
+          --line-height-hero: 1.1;
+
+        No additions needed in the `[data-theme="dark"]` block — typography
+        tokens are mode-agnostic.
+      </change>
+      <acceptance-criteria>
+        - `grep -E '--font-size-hero|--line-height-hero' src/styles/brand-tokens.css`
+          returns the two new lines.
+        - `npm run build` succeeds.
+        - No other files are modified in this phase.
+      </acceptance-criteria>
+    </phase>
+
+    <phase id="P2" name="refactor-hero-card-to-tokens"
+           priority="high"
+           estimate="40min"
+           depends-on="P1">
+      <description>
+        Replace every hardcoded visual value in `HeroCard.astro` with a token
+        reference. No layout changes, no copy changes. Visual output must be
+        pixel-equivalent in light mode and correct in dark mode.
+      </description>
+      <change file="src/components/marketing/HeroCard.astro">
+        - Replace `color: #1A1D2E` (headline) with
+          `color: var(--color-text-primary)`.
+        - Replace subhead colour with `color: var(--color-text-secondary)`.
+        - Replace `font-size: 56px` with `font-size: var(--font-size-hero)`.
+        - Replace inline `line-height: 1.1` with
+          `line-height: var(--line-height-hero)`.
+        - Replace `border-radius: 20px` with `border-radius: var(--radius-lg)`
+          (16px — closest legal token on the M3 scale).
+        - Replace `box-shadow: 0 12px 32px rgba(0,0,0,0.12)` with
+          `box-shadow: var(--elevation-3)`.
+        - Replace any spacing values with tokens from the `--space-*` scale.
+        - Keep component props, slots, and markup structure unchanged.
+      </change>
+      <acceptance-criteria>
+        - `rg '#[0-9A-Fa-f]{3,6}' src/components/marketing/HeroCard.astro`
+          returns zero hits.
+        - `rg 'px\)' src/components/marketing/HeroCard.astro` (raw px in
+          shadow or radius values) returns zero hits.
+        - `npm run build` succeeds.
+        - `npm run preview` shows the hero rendering correctly in light mode.
+        - Adding `data-theme="dark"` to `&lt;html&gt;` (via DevTools) shows
+          legible text and the card silhouette inverted correctly.
+      </acceptance-criteria>
+    </phase>
+
+    <phase id="P3" name="lighthouse-and-a11y-pass"
+           priority="medium"
+           estimate="20min"
+           depends-on="P2">
+      <description>
+        Run a Lighthouse pass against the homepage in both modes and confirm
+        no regressions. Document any contrast or motion findings, then either
+        fix them in this phase or surface them as follow-up specs.
+      </description>
+      <change file="planning/0001-template.xml">
+        Append a `&lt;phase-report id="P3"&gt;` element to this spec's
+        `&lt;changelog&gt;` summarising the Lighthouse scores observed and any
+        follow-up actions required.
+      </change>
+      <acceptance-criteria>
+        - Lighthouse Performance ≥ 95.
+        - Lighthouse Accessibility ≥ 95 in both light and dark modes.
+        - No new motion-related accessibility violations
+          (`prefers-reduced-motion` honoured).
+        - Any new findings are filed as follow-up specs in `planning/`.
+      </acceptance-criteria>
+    </phase>
+
+  </phases>
+
+  <anti-patterns>
+    DO NOT introduce a `Headline` React component as part of this spec. Token
+    references in component CSS are sufficient until at least three marketing
+    sections share the same scale.
+    DO NOT modify any other marketing components in this spec. Follow-up
+    specs will migrate `FeatureGrid`, `CTASection`, and `PricingTable`.
+    DO NOT add a new client directive to the hero. It remains static.
+    DO NOT change copy, layout, or the visual hierarchy. Token swaps only.
+    DO NOT introduce new dependencies.
+  </anti-patterns>
+
+  <references>
+    <reference name="prd-rebrand">
+      docs/bw-prd-01-rebrand.xml — the &lt;component name="HeroMain" priority="P0"&gt;
+      entry defines the canonical hero contract.
+    </reference>
+    <reference name="architecture-doc">
+      docs/architecture.md §7 (Brand Token System) — the SSOT discipline this
+      spec enforces.
+    </reference>
+    <reference name="brand-tokens">
+      src/styles/brand-tokens.css — the file edited in P1.
+    </reference>
+    <reference name="brand-rule">
+      .cursor/rules/brand.mdc — anti-patterns enforced by this spec
+      (no over-rounding, no heavy shadows, no glassmorphism).
+    </reference>
+  </references>
+
+  <changelog>
+    v1 (2026-05-15): Initial template. Demonstrates the schema with a realistic
+    P0 component refactor — replacing hardcoded visual values in HeroCard with
+    brand-token references — and adds two new typography tokens upstream.
+  </changelog>
+
+</plan>
