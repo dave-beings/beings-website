@@ -1,1 +1,0 @@
-/Users/glassbox/_dev/beings-context/tooling/core/commands/chat.md
