@@ -1,1 +1,26 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/core-github-workflow.mdc
+---
+description: "[STANDARD] GitHub workflow for creating Pull Requests and monitoring CI/CD pipelines"
+alwaysApply: false
+---
+
+# GitHub Workflow Best Practices
+
+This rule defines the standard operating procedure for creating and validating a Pull Request. The goal is to ensure our CI/CD quality gate is always verified.
+
+## The Standard Sequence
+
+1. **Create the PR:** Use `gh pr create` to open the Pull Request.
+2. **Monitor the CI/CD Pipeline:** Immediately after creating the PR, the next action **must be** to monitor the triggered GitHub Actions workflow to completion.
+3. **Confirm the Result:** Use the `gh run watch` command to stream the CI/CD logs. The successful completion of this run is the final validation of the work.
+
+### **Example Workflow**
+
+```bash
+# Step 1: Create the PR
+gh pr create --title "feat: Add new feature" --body "PR description."
+
+# Step 2: Monitor the CI/CD run immediately after
+gh run watch
+```
+
+**Enforcement: INFO** - This is a critical workflow pattern. After creating a PR, always prompt the user to monitor the CI/CD run to confirm that all automated checks have passed.

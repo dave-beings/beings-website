@@ -1,1 +1,65 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/core-consultation-routing.mdc
+---
+description: "Cross-model consultation routing — roles (Architect, Auditor, Consultant) and heuristics for selecting the correct skill"
+globs:
+alwaysApply: false
+---
+
+# Cross-Model Consultation Routing
+
+## Role Taxonomy
+
+| Role | Entity | Transport | Invocation |
+|------|--------|-----------|------------|
+| **The Human** | The user | Chat thread | Always present |
+| **The Architect** | Opus (you) | Cursor agent | Always present |
+| **The Auditor** | Gemini Web UI | Chrome DevTools bridge (`gemini-bridge.ts`) | Explicit `/second-opinion` only |
+| **The Consultant** | Any LLM via API | Direct API call (`consult.ts`) | Auto-selected or explicit `/consulting-api` |
+
+## Routing Heuristics
+
+### Default to The Consultant (API) for:
+- Pure code tasks: "refactor this", "write tests", "fix syntax", "optimize"
+- Logic explanations: "how does this function work?", "explain this code"
+- Data transformation: "convert JSON to YAML", "rewrite in TypeScript"
+- Quick sanity checks on **code logic**: "will this compile?", "is this loop infinite?"
+- Keywords: "fast check", "quick fix", "ask Claude", "ask Anthropic", any non-Google model name
+
+### Escalate to The Auditor (Web UI) for:
+- Temporal queries: "Is this deprecated?", "Is this still valid?", "latest docs"
+- External verification: "Find the documentation for...", "check against the spec"
+- Broad comparisons: "What's the difference between Library A and Library B?"
+- Visual/contextual: "Look at this screenshot", "review this diagram"
+- High-stakes validation: "Audit this for security", "sovereign audit", "DUAA compliance"
+- Sanity checks on **best practices/correctness**: "Is this the right approach?", "are we doing this properly?"
+- Keywords: "verify", "audit", "search", "check with Gemini", "second opinion", "deep dive"
+
+### The "Sanity Check" Tie-Breaker
+- **Syntactic** ("will this compile?", "is there a type error?") → The Consultant
+- **Semantic** ("is this the right pattern?", "are you sure this is best practice?") → The Auditor
+
+## Dynamic Escalation (Consultant → Auditor)
+
+If The Consultant (API) provides a response that:
+- Expresses uncertainty or hedges significantly
+- Claims lack of knowledge due to training data cutoffs
+- Provides a generic answer that doesn't address the specific question
+- Fails on two consecutive attempts across different providers
+
+Then The Architect **MUST** recommend escalating:
+> "The API response was uncertain. I recommend verifying with The Auditor (Gemini Web UI) for up-to-date information. Shall I run `/second-opinion`?"
+
+Do NOT auto-escalate without user confirmation.
+
+## Agentic Build Loop Override
+
+When the `core-agentic-build-loop` rule is active (user said "let's build" or referenced a plan),
+Gemini usage is **pre-authorized** for all loop steps. The Architect does NOT need to ask
+"Shall I run `/second-opinion`?" at each step — the user authorized the full loop upfront.
+
+The routing heuristics below still apply **outside** the build loop for ad-hoc queries.
+
+## What This Rule Does NOT Do
+
+- It does NOT replace the skill files. Each skill (`second-opinion`, `consulting-api`) contains its own detailed workflow.
+- It does NOT restrict provider selection within the Consultant skill. See `consulting-api/SKILL.md` for provider rules.
+- It does NOT override explicit user requests. If the user names a specific skill or path, follow their instruction.

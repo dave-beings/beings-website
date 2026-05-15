@@ -1,1 +1,85 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/test-integrity.mdc
+---
+description: "Prevent AI from modifying tests to make them pass (reward hacking prevention)"
+globs: "**/*.test.ts,**/*.test.tsx,**/*.spec.ts,**/*.spec.tsx,**/tests/**,**/__tests__/**"
+alwaysApply: false
+---
+
+# Test Integrity Rules
+
+## Core Principle
+
+Tests encode architecture invariants. They are **laws**, not suggestions.
+
+## Forbidden Actions
+
+1. **NEVER modify a test file to make a failing test pass.**
+2. **NEVER weaken assertions** (e.g., changing `toBe(true)` to `toBeTruthy()`).
+3. **NEVER remove edge case tests** to reduce failures.
+4. **NEVER change expected values** to match buggy output.
+5. **NEVER add `test.skip()` or `.skip` to hide failures.**
+6. **NEVER add conditional skips** (e.g., `if (mobile) test.skip()`) without explicit user approval.
+7. **NEVER reduce test scope** (e.g., removing browser/viewport from test matrix).
+8. **NEVER catch errors to silence failures** (e.g., wrapping in try/catch that swallows).
+
+## Required Behavior
+
+When a test fails:
+1. **Fix the implementation** in the source file, not the test.
+2. If you believe the test is incorrect, **STOP and ask for permission**.
+3. Explain why the test is wrong before requesting approval to modify it.
+
+When a test fails on specific platforms (mobile, Safari, etc.):
+1. **STOP** — Do not skip or modify the test.
+2. **Report** — "Test X fails on [platform] because [reason]."
+3. **Ask** — "Should I: (a) fix the app, (b) write platform-specific tests, or (c) skip with your approval?"
+4. **Wait** — Do not proceed until user responds.
+
+## Allowed Test Modifications
+
+You MAY modify test files ONLY when:
+- Refactoring test structure (without changing assertions)
+- User explicitly states requirements have changed
+- Adding NEW test cases (not modifying existing ones)
+- Fixing typos or improving test descriptions
+
+## Invariant References
+
+These test files validate architecture invariants from `docs/architecture/invariants.md`:
+
+| Test File | Invariants |
+|-----------|------------|
+| `transport.test.ts` | SEC-06, FAIL-CLOSED, TIER-* |
+| `migration.test.ts` | MIG-01, MIG-02, MIG-03 |
+| `offline.spec.ts` | ARC-01 |
+
+Modifying assertions in these files is equivalent to **changing the architecture**.
+
+## Common Evasion Patterns (Watch For)
+
+| Pattern | Example | Why It's Wrong |
+|---------|---------|----------------|
+| Skip | `test.skip()`, `.skip` | Hides failure instead of fixing |
+| Conditional skip | `if (mobile) return` | Reduces coverage silently |
+| Loose matching | `toContain` → `toBeDefined` | Weaker assertion |
+| Try/catch | `try { assert } catch {}` | Swallows failures |
+| Timeout increase | `timeout: 60000` | Masks performance bug |
+| Retry addition | `retries: 3` | Masks flaky test |
+
+## Verification Command
+
+If you suspect reward hacking occurred:
+
+```bash
+git checkout tests/ && pnpm test
+```
+
+If tests fail after reverting, the implementation is broken.
+
+## Red Flag Phrases
+
+If the AI says any of these, verify carefully:
+- "I'll skip this for now"
+- "This test is flaky, let me adjust"
+- "The test expectation was wrong"
+- "Let me make this more flexible"
+- "This works differently on [platform]"

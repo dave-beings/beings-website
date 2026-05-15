@@ -1,1 +1,123 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/brand.mdc
+---
+description: Beings brand design tokens and visual guidelines
+alwaysApply: false
+---
+
+# Beings Brand System
+
+## Visual Philosophy: "Canvas + Card"
+
+The marketing site must feel like the product. Key principle:
+
+- **CANVAS**: Gray background (`#F0F4F9`) provides breathing room
+- **CARD**: White floating panels contain content with subtle elevation
+- **DEPTH**: Cards "float" above canvas, creating visual hierarchy
+
+**DO NOT** use heavy gradients, full-width colored bands, or "generic SaaS" aesthetics.
+
+## Color Palette
+
+Use CSS custom properties from `src/styles/brand-tokens.css`:
+
+### Primary Colors
+| Token | Light Mode | Dark Mode | Usage |
+|-------|------------|-----------|-------|
+| `--color-primary` | #5B6FCC | #A1B2F8 | Primary actions, links |
+| `--color-primary-light` | #8D9EE8 | #C4D0FF | Hover states |
+| `--color-primary-dark` | #3E4B99 | #7B8FE8 | Active states |
+| `--color-secondary` | #7E57C2 | #C8C7FA | Accents, highlights |
+
+### Surfaces
+| Token | Light Mode | Dark Mode | Usage |
+|-------|------------|-----------|-------|
+| `--color-background` | #F0F4F9 | #12121E | Page background |
+| `--color-surface` | #FFFFFF | #1E1E2D | Cards, elevated elements |
+| `--color-divider` | #E2E8F0 | #2A2A3E | Borders, separators |
+
+### Text
+| Token | Light Mode | Dark Mode | Usage |
+|-------|------------|-----------|-------|
+| `--color-text-primary` | #1A1D2E | #EAEAF2 | Headings, body text |
+| `--color-text-secondary` | #4A5568 | #B8B8D1 | Captions, muted text |
+
+## Typography
+
+**Font Family:** `'Roboto Flex', 'Helvetica', 'Arial', sans-serif`
+
+| Variant | Size | Weight | Line Height |
+|---------|------|--------|-------------|
+| H1 | 3rem (48px) | 700 | 1.2 |
+| H2 | 2.5rem (40px) | 700 | 1.3 |
+| H3 | 2rem (32px) | 600 | 1.4 |
+| H4 | 1.5rem (24px) | 600 | 1.4 |
+| Body | 1rem (16px) | 400 | 1.6 |
+| Small | 0.875rem (14px) | 400 | 1.6 |
+
+## Spacing
+
+8px grid system. Use multiples: 8, 16, 24, 32, 40, 48, 64, 80, 96, 128px.
+
+Tailwind mapping: `p-2` = 8px, `p-4` = 16px, `p-6` = 24px, etc.
+
+## Border Radius (M3 Scale)
+
+| Size | Value | Components |
+|------|-------|------------|
+| Small | 8px | Buttons, inputs |
+| Medium | 12px | Cards, dialogs |
+| Large | 16px | Large cards, floating panels |
+| XL | 28px | Pills, composer input |
+| Full | 9999px | Chips, toggles (stadium shape) |
+
+**CRITICAL**: Use small (8px) for buttons, medium (12px) for cards. Do NOT over-round.
+
+## Elevation (M3 Shadows)
+
+| Level | Value | Usage |
+|-------|-------|-------|
+| 1 | `0 1px 2px rgba(0,0,0,0.05)` | Cards, sheets |
+| 2 | `0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06)` | Menus, headers |
+| 3 | `0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06)` | Dialogs, floating panels |
+
+**DO NOT** use heavy shadows like `0 25px 50px rgba(0,0,0,0.25)`.
+
+## Button Style
+
+- Border radius: **8px** (small) - NOT rounded-full
+- Text transform: **none** - NOT uppercase
+- Font weight: 600 (semibold)
+- Press effect: `scale(0.98)` on `:active`
+
+## State Layers
+
+| State | Opacity | Usage |
+|-------|---------|-------|
+| Hover | 0.08 | Mouse hover |
+| Focus | 0.10 | Keyboard focus |
+| Pressed | 0.12 | Active click |
+
+## Motion
+
+| Easing | Value | Usage |
+|--------|-------|-------|
+| Standard | `cubic-bezier(0.4, 0, 0.2, 1)` | Most transitions |
+| Emphasized | `cubic-bezier(0.2, 0, 0, 1)` | Attention-grabbing |
+| Decelerate | `cubic-bezier(0.05, 0.7, 0.1, 1)` | Enter animations |
+
+| Duration | Value | Usage |
+|----------|-------|-------|
+| Fast | 150ms | Micro-interactions |
+| Medium | 300ms | Page transitions |
+
+## Anti-Patterns (AVOID)
+
+1. **Heavy gradients** - No purple-to-blue full-section gradients
+2. **Blocky sections** - No full-width colored bands
+3. **Oversized radii** - No rounded-3xl on cards
+4. **Thick borders** - Use 1px divider color only
+5. **Backdrop blur** - No glassmorphism on headers
+6. **Uppercase buttons** - Use sentence case
+
+## Dark Mode
+
+Toggle via `[data-theme="dark"]` on `<html>`. CSS variables auto-switch.

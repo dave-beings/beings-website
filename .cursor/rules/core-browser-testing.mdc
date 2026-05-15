@@ -1,1 +1,120 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/core-browser-testing.mdc
+---
+description: "[STANDARD] Browser automation — always use external Chrome on port 9222, never Cursor's built-in browser"
+globs: 
+alwaysApply: false
+---
+
+# Browser Testing Setup
+
+## CRITICAL: Browser Selection
+
+**ALWAYS use `chrome-devtools` MCP** (external Chrome on port 9222) for ALL browser operations.
+
+**NEVER use `cursor-ide-browser` MCP** (Cursor's built-in browser) as the primary browser. It lacks authentication state, has rendering limitations, and is not the tested method.
+
+Before any browser operation:
+1. Check Chrome is running: `lsof -i :9222`
+2. If not running: `chrome-mcp` (or launch manually with `--remote-debugging-port=9222`)
+3. Use `chrome-devtools` MCP tools (`navigate_page`, `take_screenshot`, etc.)
+
+## Architecture
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│  Cursor Agent   │────▶│ Chrome DevTools  │────▶│ Separate Chrome │
+│                 │     │      MCP         │     │   (port 9222)   │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+                              │
+                              ▼
+                        .cursor/mcp.json
+```
+
+## Why This Setup?
+
+1. **Authenticated sessions** — Chrome has your logged-in state (Cloudflare, GitHub, etc.)
+2. **No automation banner** — Chrome started manually doesn't show "controlled by automated software"
+3. **Isolated profile** — Separate from your daily browser at `~/.chrome-mcp-profile`
+4. **16:9 viewport** — 1024x576 (pixel-perfect 16:9, scales to 1080p/4K)
+5. **Performance tools** — Access to Chrome DevTools performance tracing
+
+## Quick Start
+
+### 1. Install the launcher script (one-time)
+
+```bash
+# Create the script
+mkdir -p ~/.local/bin
+cat > ~/.local/bin/chrome-mcp << 'EOF'
+#!/bin/bash
+PROFILE_DIR="$HOME/.chrome-mcp-profile"
+PORT=9222
+
+if lsof -i :$PORT > /dev/null 2>&1; then
+    echo "✓ MCP Chrome already running on port $PORT"
+    exit 0
+fi
+
+echo "Starting MCP Chrome on port $PORT..."
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+    --remote-debugging-port=$PORT \
+    --user-data-dir=$PROFILE_DIR \
+    --no-first-run \
+    --no-default-browser-check \
+    --window-size=1024,576 &
+
+sleep 1
+echo "✓ MCP Chrome ready at http://127.0.0.1:$PORT"
+EOF
+
+chmod +x ~/.local/bin/chrome-mcp
+
+# Add to PATH (if not already)
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### 2. Start Chrome for MCP
+
+```bash
+chrome-mcp
+```
+
+### 3. Use in Cursor
+
+The project-level `.cursor/mcp.json` configures Chrome DevTools MCP to connect to port 9222.
+
+## Available MCP Tools
+
+| Tool | Purpose |
+|------|---------|
+| `navigate_page` | Go to URL |
+| `take_screenshot` | Capture viewport |
+| `evaluate_script` | Run JavaScript |
+| `click`, `fill`, `hover` | Interact with elements |
+| `performance_start_trace` | Record performance |
+| `emulate` | Network/device emulation |
+
+## Headless Mode
+
+For CI or background testing:
+
+```bash
+chrome-mcp --headless
+```
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| MCP can't connect | Run `chrome-mcp` first |
+| Port 9222 in use | `lsof -i :9222` then `kill <PID>` |
+| Wrong profile | Check `chrome://version` for Profile Path |
+
+## Alternatives
+
+| MCP | Browsers | Best For |
+|-----|----------|----------|
+| Chrome DevTools | Chrome only | Performance analysis |
+| Playwright | Chrome, Firefox, WebKit | Cross-browser testing |
+
+See `.cursor/mcp.json` for configuration.

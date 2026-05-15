@@ -1,1 +1,19 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/core-git-commits.mdc
+---
+description: "[STANDARD] Conventional commit message format for consistent version control"
+alwaysApply: false
+---
+
+# Git Commit Standards
+
+Use conventional commit messages. The format is `<type>(<scope>): <subject>`.
+
+Common types include:
+- **feat**: A new feature
+- **fix**: A bug fix
+- **docs**: Documentation only changes
+- **style**: Changes that do not affect the meaning of the code
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **test**: Adding missing tests or correcting existing tests
+- **chore**: Changes to the build process or auxiliary tools
+
+**Enforcement: WARNING** - Consistent commit messages improve project history and enable automated tooling.

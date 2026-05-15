@@ -1,1 +1,60 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/core-parallel-agents-usage.mdc
+---
+description: "Workflow instructions for Parallel Agents, async subagents, and high-risk refactoring"
+alwaysApply: false
+---
+
+# Parallel Agents & Subagent Usage
+
+## 1. Activation Triggers
+
+Use when user asks for "comparisons", "high-risk refactors", or "prototypes".
+
+## 2. Subagent Execution (Cursor v2.5+)
+
+Subagents now run **asynchronously** — the parent agent continues working while subagents execute in the background. Subagents can also spawn their own subagents (nested execution).
+
+### When to use subagents
+
+| Pattern | Description |
+|---------|-------------|
+| **TDD Pair** | Agent A implements, Agent B writes tests from the same interface |
+| **Explore + Implement** | Agent A explores codebase for patterns, Agent B builds the feature |
+| **Library Scout** | Agent A scaffolds integration, Agent B researches alternatives |
+| **Parallel Refactor** | Compare Strategy A vs Strategy B in separate branches |
+
+### Subagent best practices
+
+- **Interface-first:** Define shared types/interfaces BEFORE spawning parallel agents
+- **Keep scope tight:** Each subagent should own one clearly defined task
+- **Avoid file conflicts:** Don't let two subagents write to the same file
+- **Use async for independence:** Only use async when agents don't need each other's output
+
+## 3. Prompt Generation Protocol
+
+When generating a prompt for parallel work:
+
+- **Include Context:** Reference relevant `docs/` files for domain context (architecture, product, strategy).
+- **Use Strict Spec:** Define clear success criteria.
+- **Define Success:** Explicitly state what the "Winner" looks like.
+
+### Example Prompt Template
+
+```
+CONTEXT:
+@docs/architecture/invariants.md (core architectural laws)
+@docs/product/strategy.md (product strategy)
+
+TASK:
+Implement [Feature] comparing [Strategy A] vs [Strategy B].
+
+EVALUATION:
+Optimize for Maintainability.
+```
+
+## 4. Validation (Post-Run)
+
+After applying changes from parallel agents:
+
+- **Merge conflicts:** Check for overlapping edits across subagent outputs.
+- **Trust Pattern:** Check citation requirements.
+- **Type check:** Run `tsc --noEmit` to verify type safety.

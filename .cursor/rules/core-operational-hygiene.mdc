@@ -1,1 +1,37 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/core-operational-hygiene.mdc
+---
+description: "Ensure deployment artifacts are actually deployed, not just written"
+alwaysApply: true
+---
+
+# Operational Hygiene
+
+Writing code is not the same as deploying it. Every artifact you create must be operational.
+
+## Rules
+
+### Daemons & Services
+- If you create a launchd plist (`*.plist`), **install it** (`cp` to `~/Library/LaunchAgents/` and `launchctl load`)
+- If you create a systemd unit, **enable it**
+- If you write a cron job, **install it**
+- If you cannot install it (missing permissions, wrong machine), document WHY and add a TODO
+
+### Configuration Files & Secrets
+- **NEVER create `.dev.vars`** — diskless dev requires its absence. If `.dev.vars` exists, delete it.
+- **NEVER hardcode secrets** in source files, config, or terminal commands.
+- If you modify `tsconfig.json`, run `tsc --noEmit` to verify
+
+### Data & Storage
+- If you create a database schema, **verify it initialises** (run the migration or init script)
+- If you download or generate large data files, **add them to `.gitignore`**
+- Never commit binary files, database files, or data dumps to git
+
+### Tests
+- If you write tests, **run them before committing**
+- If tests fail, **fix the code, not the tests** (see test-integrity rule)
+- Report test results in your response
+
+### Post-Phase Verification
+Before declaring any phase complete:
+1. All tests pass
+2. Changes are committed and pushed
+3. Any deployment artifacts are deployed or documented

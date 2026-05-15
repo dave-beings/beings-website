@@ -1,1 +1,51 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/core-commit-cadence.mdc
+---
+description: "Enforce regular commits to prevent data loss from uncommitted work"
+alwaysApply: true
+---
+
+# Commit Cadence
+
+Uncommitted code is unrecoverable code. You MUST commit regularly.
+
+## When to Commit
+
+- **After each phase or milestone** — when tests pass and a logical unit of work is complete
+- **Before starting a new phase** — ensure the previous phase is saved
+- **Before ending a session** — never leave uncommitted work
+- **Maximum 30 minutes** of uncommitted changes — if you've been coding for 30 minutes without a commit, stop and commit now
+
+## Pre-Commit Checklist
+
+Before every commit:
+1. All tests pass (`npx tsx --test` or equivalent) — if tests are failing at the 30-minute mark, commit with `wip:` prefix instead of blocking
+2. `.gitignore` exists and covers: `node_modules/`, `*.sqlite*`, `data/`, `.env`, `*.log`, `*.err`
+3. No secrets, credentials, or API keys in staged files
+4. Commit message follows conventional format (`feat:`, `fix:`, `chore:`, `test:`, `wip:`)
+
+## First Commit in a New Workspace
+
+Before writing any source code, create and commit a `.gitignore` that covers:
+```
+node_modules/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+data/
+.env
+.env.*
+*.log
+*.err
+dist/
+build/
+```
+
+## RED Workspace Additional Ignores
+
+If `.cursor/.security-level` is `red`, also add:
+```
+*.mbox
+*.eml
+*.pst
+attachments/
+raw/
+```

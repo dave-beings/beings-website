@@ -1,1 +1,42 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/core-self-verification.mdc
+---
+description: "Agents must verify their own code changes by running tests or type checks before completing their turn"
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
+alwaysApply: false
+---
+
+# Self-Verification Protocol
+
+When you modify source code, verify your changes before presenting them as complete.
+
+## Verification Steps
+
+1. After editing source files, run the project's verification script in your terminal
+2. If verification fails, fix the errors in the same turn — do not present broken code
+3. If you cannot fix after a reasonable effort, stop and present the failure output to the user
+
+## Safe Commands
+
+Use ONLY these pre-configured scripts. Never run raw `npx` commands for verification.
+
+| Check | Command | Notes |
+|-------|---------|-------|
+| Unit tests | `npm run ai:test -- <filepath>` | Always append the specific file you changed. Never run the global test suite. |
+| Type check | `npm run ai:typecheck` | Runs project-wide check. Never append a filepath — `tsc` ignores `tsconfig.json` when given a specific file. |
+
+If these scripts are not configured in the project's `package.json`, skip verification.
+
+## When to Skip
+
+- Documentation or markdown changes
+- Configuration files (.json, .yaml, .toml, .env)
+- The user explicitly says "skip verification" or "don't test"
+- The `ai:test` / `ai:typecheck` scripts are not present in `package.json`
+- You are only reading or exploring code, not modifying it
+
+## When to Stop and Escalate
+
+If verification fails and your fix attempt also fails verification:
+1. **Stop.** Do not continue fixing in a loop.
+2. Present your code changes alongside the full error output.
+3. Explain what you attempted and why it failed.
+4. Let the human decide the next step.

@@ -1,1 +1,42 @@
-/Users/glassbox/_dev/beings-context/tooling/core/rules/00-meta-governance.mdc
+---
+description: "Bedrock constraints: SSOT enforcement, operational invariants, commit cadence"
+alwaysApply: true
+---
+
+# Meta-Governance
+
+The only always-applied rule. Everything here is a hard constraint that applies to every interaction.
+
+## SSOT Enforcement
+
+| Fact | SSOT Location | Never Duplicate In |
+|------|---------------|-------------------|
+| Brand design tokens | `src/styles/brand-tokens.css` | Component styles, docs |
+| Product positioning | `beings-local/docs/vision.md` | AGENTS.md (reference only) |
+| Page/component scope | `docs/bw-prd-01-rebrand.xml` | Source files (reference only) |
+| Narrative architecture | `docs/architecture.md` | Rules (reference only) |
+
+1. **Reference, don't copy.** Link to the SSOT instead of hardcoding values.
+2. **Grep before committing.** Search for other instances of any value you update.
+3. **Flag conflicts.** If governance files contradict, STOP and surface it to the human.
+4. **Docs are context, rules are constraints.** Do not put behavioral constraints in docs or knowledge dumps in rules.
+
+## Operational Invariants
+
+- **NEVER create `.dev.vars`** — diskless dev requires its absence.
+- **NEVER hardcode secrets** in source files, config, or terminal commands.
+- If you create a launchd plist, **install it**. If you create a schema, **verify it initialises**.
+- If you download large data files, **add them to `.gitignore`**.
+
+## Escalation
+
+You have cross-model tools: `consult.ts` (API, fast, stateless) and `gemini-bridge.ts` (Gemini Web UI, live search, stateful).
+Escalate when: stuck 3+ attempts on the same bug, using APIs changed after late 2025, or making architecture decisions.
+See `core-consultation-routing.mdc` for full routing.
+
+## Commit Cadence
+
+- **Maximum 30 minutes** of uncommitted changes — stop and commit.
+- Commit after each phase, before starting a new phase, before ending a session.
+- If tests fail at the 30-minute mark, commit with `wip:` prefix.
+- No secrets or credentials in staged files.
